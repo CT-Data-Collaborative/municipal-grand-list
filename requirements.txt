@@ -1,0 +1,4 @@
+pytest==3.0.5
+requests==2.12.4
+datapackage
+-e git+git@github.com:CT-Data-Collaborative/pytest-ctdata-datapackage.git#egg=pytest-ctdata

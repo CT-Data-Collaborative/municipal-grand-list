@@ -1,0 +1,135 @@
+{
+  "name": "municipal_grand_list",
+  "datapackage_version": "1.0-beta.18",
+  "title": "Municipal-Grand-List",
+  "description": "Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates.",
+  "version": "1.0",
+  "licenses": [{
+    "url": "http://opendatacommons.org/licenses/pddl/",
+    "name": "Open Data Commons Public Domain",
+    "version": "1.0",
+    "id": "odc-pddl"
+  }],
+  "sources": [{
+    "name": "US Census",
+    "web": ""
+  }],
+  "author":[ {
+    "name": "Jenna Daly",
+    "email": "jdaly@ctdata.org",
+    "web": "http://ctdata.org"
+  }],
+  "contributor": [],
+  "resources": [
+    {
+      "path": "data/data.csv",
+      "format": "csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "Town",
+            "type": "string",
+            "constraints": {
+              "enum": ["Town", "County", "Town/County", "District", "Other"]
+            },
+            "dimension": false
+          },
+          {
+            "name": "FIPS",
+            "type": "string",
+            "dimension": false
+          },
+          {
+            "name": "Year",
+            "type": "string",
+            "dimension": false
+          },
+          {
+            "name": "Measure Type",
+            "type": "string",
+            "dimension": true
+          },
+          {
+            "name": "Variable",
+            "type": "string",
+            "dimension": false
+          },
+          {
+            "name": "Value",
+            "type": "number",
+            "dimension": false
+          }
+        ]
+      }
+    }
+  ],
+  "last_modified": "02/15/2017",
+  "ckan_extras": {
+    "full_description": {
+      "ckan_name": "Full Description",
+      "value": "tate Fiscal Years run from July 1 through the following June 30. Population estimates used to calculate Per Capita measures were derived using the Connecticut Department of Public Health estimates as of July 1 of the year ending the State Fiscal Year - ie. SFY 2012-2013 uses the population estimate for July 1, 2013. Grand List indicators are derived from October of the year preceding the State Fiscal Year - ie SFY 2012-2013 uses Grand List data from October 2011. Due to the required time and resources necessary for re-evalutaion, municipalities are evaluated for Grand List figures on a rolling basis. Equalized Net Grand List values are derived as a way of giving an equal ground for comparison to all municipalities, regardless of when that municipality is scheduled to be re-evaluated next. Equalized Mill Rates are calculated using the Equalized Net Grand List. Equalized Net Grand List figures are a measure of only the taxable real and personal property, i.e. the gross property estimate minus any tax exempt properties. Mill Rates are the amount of tax payable per $1000 of value for a given property. Mill Rates are presented as thousandths of a dollar, e.g. a Mill Rate of 1 means every $1000 of value would equal $1 of tax. These rates are calculated by taking the projected revenue from taxable property, dividing it by the total net worth of taxable property (Equalized Net Grand List) and multiplying by 1000.",
+      "type": "string",
+    },
+    "suppression": {
+      "ckan_name": "Suppression",
+      "value": "",
+      "type": "string"
+    },
+    "technical_notes": {
+      "ckan_name": "Technical Notes",
+      "value": "None",
+      "type": "string",
+    },
+    "domain": {
+      "ckan_name": "Domain",
+      "value": "Civic Vitality",
+      "type": "string",
+    },
+    "subdomain": {
+      "ckan_name": "Subdomain",
+      "value": "Public Finance",
+      "type": "string",
+    },
+    "geography": {
+      "ckan_name": "Geography",
+      "value": "Town",
+      "type": "string",
+      "constraints": {
+        "enum": ["Town", "County", "Town/County", "District", "Other"]
+      }
+    },
+    "frequency": {
+      "ckan_name": "Frequency",
+      "value": "Annual",
+      "type": "string"
+    },
+    "years_in_catalog": {
+      "ckan_name": "Years in Catalog",
+      "value": []
+      "type": "array",
+    },
+    "latest_year": {
+      "ckan_name": "Latest Year Available from Source",
+      "value": "SFY 2015-2016",
+      "type": "string",
+    },
+    "disabled_views": {
+      "ckan_name": "Disabled Views",
+      "value": [],
+      "type": "array",
+      "constraings": {
+        "enum": ["map", "table", "bar", "line"]
+      }
+    },
+    "units": {
+      "ckan_name": "Units",
+      "value": {
+        "Number": "",
+        "Percent": "%"
+      }
+    },
+    "default": {},
+  },
+  "spot_tests": [],
+  "dimension_groups": []
+}
