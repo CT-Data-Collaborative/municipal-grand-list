@@ -83,6 +83,20 @@ all_data <- round_df(all_data, 0)
 
 #Merge in GL Totals from component files
 
+#source in collatedGLComponents.csv
+
+#append new data
+#save updated components csv back out to repo
+
+#use updated components csv as a resource in this script
+from newly added folder
+read in file name like 'gl components'
+
+read in 
+
+
+
+
 #Create calculated columns
 
 "Equalized Net Grand List per Capita"

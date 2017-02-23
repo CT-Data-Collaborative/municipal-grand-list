@@ -1,0 +1,6 @@
+.~lock.*.*
+.cache/
+.idea/
+venv/
+__pycache__/
+.Rproj.user
