@@ -1,0 +1,344 @@
+TownCode,Town
+1,Andover
+Andover,Andover
+2,Ansonia
+Ansonia,Ansonia
+3,Ashford
+Ashford,Ashford
+4,Avon
+Avon,Avon
+5,Barkhamsted
+Barkhamsted,Barkhamsted
+6,Beacon Falls
+Beacon Falls,Beacon Falls
+7,Berlin
+Berlin,Berlin
+8,Bethany
+Bethany,Bethany
+9,Bethel
+Bethel,Bethel
+10,Bethlehem
+Bethlehem,Bethlehem
+11,Bloomfield
+Bloomfield,Bloomfield
+12,Bolton
+Bolton,Bolton
+13,Bozrah
+Bozrah,Bozrah
+14,Branford
+Branford,Branford
+15,Bridgeport
+Bridgeport,Bridgeport
+Bridgeport-,Bridgeport
+16,Bridgewater
+Bridgewater,Bridgewater
+17,Bristol
+Bristol,Bristol
+18,Brookfield
+Brookfield,Brookfield
+19,Brooklyn
+Brooklyn,Brooklyn
+20,Burlington
+Burlington,Burlington
+21,Canaan
+Canaan,Canaan
+22,Canterbury
+Canterbury,Canterbury
+23,Canton
+Canton,Canton
+24,Chaplin
+Chaplin,Chaplin
+25,Cheshire
+Cheshire,Cheshire
+26,Chester
+Chester,Chester
+27,Clinton
+Clinton,Clinton
+28,Colchester
+Colchester,Colchester
+29,Colebrook
+Colebrook,Colebrook
+30,Columbia
+Columbia,Columbia
+31,Cornwall
+Cornwall,Cornwall
+32,Coventry
+Coventry,Coventry
+33,Cromwell
+Cromwell,Cromwell
+34,Danbury
+Danbury,Danbury
+Danbury-PHASE IN,Danbury
+35,Darien
+Darien,Darien
+36,Deep River
+Deep River,Deep River
+37,Derby
+Derby,Derby
+38,Durham
+Durham,Durham
+39,Eastford
+Eastford,Eastford
+40,East Granby
+East Granby,East Granby
+41,East Haddam
+East Haddam,East Haddam
+42,East Hampton
+East Hampton,East Hampton
+43,East Hartford
+East Hartford,East Hartford
+44,East Haven
+East Haven,East Haven
+45,East Lyme
+East Lyme,East Lyme
+46,Easton
+Easton,Easton
+Easton ,Easton
+47,East Windsor
+East Windsor,East Windsor
+48,Ellington
+Ellington,Ellington
+49,Enfield
+Enfield,Enfield
+50,Essex
+Essex,Essex
+51,Fairfield
+Fairfield,Fairfield
+52,Farmington
+Farmington,Farmington
+53,Franklin
+Franklin,Franklin
+54,Glastonbury
+Glastonbury,Glastonbury
+55,Goshen
+Goshen,Goshen
+56,Granby
+Granby,Granby
+57,Greenwich
+Greenwich,Greenwich
+58,Griswold
+Griswold,Griswold
+59,Groton
+Groton,Groton
+60,Guilford
+Guilford,Guilford
+61,Haddam
+Haddam,Haddam
+62,Hamden
+Hamden,Hamden
+63,Hampton
+Hampton,Hampton
+64,Hartford
+Hartford,Hartford
+65,Hartland
+Hartland,Hartland
+66,Harwinton
+Harwinton,Harwinton
+67,Hebron
+Hebron,Hebron
+68,Kent
+Kent,Kent
+69,Killingly
+Killingly,Killingly
+70,Killingworth
+Killingworth,Killingworth
+Killlingworth,Killingworth
+71,Lebanon
+Lebanon,Lebanon
+72,Ledyard
+Ledyard,Ledyard
+73,Lisbon
+Lisbon,Lisbon
+74,Litchfield
+Litchfield,Litchfield
+75,Lyme
+Lyme,Lyme
+76,Madison
+Madison,Madison
+77,Manchester
+Manchester,Manchester
+78,Mansfield
+Mansfield,Mansfield
+79,Marlborough
+Marlborough,Marlborough
+80,Meriden
+Meriden,Meriden
+81,Middlebury
+Middlebury,Middlebury
+82,Middlefield
+Middlefield,Middlefield
+83,Middletown
+Middletown,Middletown
+84,Milford
+Milford,Milford
+85,Monroe
+Monroe,Monroe
+86,Montville
+Montville,Montville
+87,Morris
+Morris,Morris
+88,Naugatuck
+Naugatuck,Naugatuck
+89,New Britain
+New Britain,New Britain
+90,New Canaan
+New Canaan,New Canaan
+91,New Fairfield
+New Fairfield,New Fairfield
+92,New Hartford
+New Hartford,New Hartford
+93,New Haven
+New Haven,New Haven
+94,Newington
+Newington,Newington
+95,New London
+New London,New London
+96,New Milford
+New Milford,New Milford
+97,Newtown
+Newtown,Newtown
+98,Norfolk
+Norfolk,Norfolk
+99,North Branford
+North Branford,North Branford
+100,North Canaan
+North Canaan,North Canaan
+101,North Haven
+North Haven,North Haven
+102,North Stonington
+North Stonington,North Stonington
+103,Norwalk
+Norwalk,Norwalk
+104,Norwich
+Norwich,Norwich
+105,Old Lyme
+Old Lyme,Old Lyme
+106,Old Saybrook
+Old Saybrook,Old Saybrook
+107,Orange
+Orange,Orange
+108,Oxford
+Oxford,Oxford
+109,Plainfield
+Plainfield,Plainfield
+110,Plainville
+Plainville,Plainville
+111,Plymouth
+Plymouth,Plymouth
+112,Pomfret
+Pomfret,Pomfret
+113,Portland
+Portland,Portland
+114,Preston
+Preston,Preston
+115,Prospect
+Prospect,Prospect
+116,Putnam
+Putnam,Putnam
+117,Redding
+Redding,Redding
+118,Ridgefield
+Ridgefield,Ridgefield
+119,Rocky Hill
+Rocky Hill,Rocky Hill
+120,Roxbury
+Roxbury,Roxbury
+121,Salem
+Salem,Salem
+122,Salisbury
+Salisbury,Salisbury
+123,Scotland
+Scotland,Scotland
+124,Seymour
+Seymour,Seymour
+125,Sharon
+Sharon,Sharon
+126,Shelton
+Shelton,Shelton
+127,Sherman
+Sherman,Sherman
+128,Simsbury
+Simsbury,Simsbury
+129,Somers
+Somers,Somers
+130,Southbury
+Southbury,Southbury
+131,Southington
+Southington,Southington
+132,South Windsor
+South Windsor,South Windsor
+133,Sprague
+Sprague,Sprague
+134,Stafford
+Stafford,Stafford
+135,Stamford
+Stamford,Stamford
+136,Sterling
+Sterling,Sterling
+137,Stonington
+Stonington,Stonington
+138,Stratford
+Stratford,Stratford
+139,Suffield
+Suffield,Suffield
+140,Thomaston
+Thomaston,Thomaston
+141,Thompson
+Thompson,Thompson
+142,Tolland
+Tolland,Tolland
+143,Torrington
+Torrington,Torrington
+144,Trumbull
+Trumbull,Trumbull
+145,Union
+Union,Union
+146,Vernon
+Vernon,Vernon
+147,Voluntown
+Voluntown,Voluntown
+148,Wallingford
+Wallingford,Wallingford
+149,Warren
+Warren,Warren
+150,Washington
+Washington,Washington
+151,Waterbury
+Waterbury,Waterbury
+152,Waterford
+Waterford,Waterford
+153,Watertown
+Watertown,Watertown
+154,Westbrook
+Westbrook,Westbrook
+155,West Hartford
+West Hartford,West Hartford
+156,West Haven
+West Haven,West Haven
+157,Weston
+Weston,Weston
+158,Westport
+Westport,Westport
+159,Wethersfield
+Wethersfield,Wethersfield
+160,Willington
+Willington,Willington
+161,Wilton
+Wilton,Wilton
+162,Winchester
+Winchester,Winchester
+163,Windham
+Windham,Windham
+164,Windsor
+Windsor,Windsor
+165,Windsor Locks
+Windsor Locks,Windsor Locks
+166,Wolcott
+Wolcott,Wolcott
+Wolcott*,Wolcott
+167,Woodbridge
+Woodbridge,Woodbridge
+168,Woodbury
+Woodbury,Woodbury
+169,Woodstock
+Woodstock,Woodstock

@@ -1,6 +1,6 @@
 library("readxl")
-#library("xlsx")
 library(stringr)
+library(dplyr)
 
 ##################################################################
 #
@@ -32,7 +32,7 @@ for(i in 1:length(all_xls)) {
     current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=3, skip=0))
   else
     current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=1, skip=0))
-    assign(paste0("GLdata_", substr(all_xls[i], 1, 4)), current_file)
+  assign(paste0("GLdata_", substr(all_xls[i], 1, 4)), current_file)
 }
 
 
@@ -49,7 +49,7 @@ for(i in 1:length(get_GLdata_only)) {
     current_file <- get(get_GLdata_only[i])[-c(1), ]
   else
     current_file <- get(get_GLdata_only[i])
-    assign(paste0("updated_GLdata_", substr(get_GLdata_only[i], 8, 12)), current_file)
+  assign(paste0("updated_GLdata_", substr(get_GLdata_only[i], 8, 12)), current_file)
 }
 
 #2b: all years where we need to set second row to header
@@ -70,9 +70,10 @@ for(i in 1:length(get_updated_only)) {
   }
 }    
 
-#Step 3: Add year column
+#Step 3: Add year column and only takes first 169 rows
 for (i in 1:length(get_updated_only)) {
   current_file <- get(get_updated_only[i])
+  current_file <- current_file[1:169,]
   get_year <- substr(get_updated_only[i], 16, 20)
   get_year <- as.numeric(get_year)
   SFY <- paste(get_year + 1, get_year + 2, sep = "-")
@@ -80,7 +81,6 @@ for (i in 1:length(get_updated_only)) {
   current_file$Year <- SFY2  
   assign(paste0("updated_GLdata_", substr(get_updated_only[i], 16, 20)), current_file)  
 }
-
 
 #Step 4: read in select columns and bind together
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
@@ -92,139 +92,106 @@ all_GL_data <- data.frame(stringsAsFactors=F)
 for (i in 1:length(get_updated_only)) {
   col_names <- colnames(get(get_updated_only[i]))
   
-  #search for "Town Code" 
-  # town_code_col <- c("Town Code", "Code") #OR
-  # town_code_col_select_grep <- grep(paste(town_code_col, collapse = "|"), col_names, value=T)
-  # 
-  # if (identical(town_code_col_select_grep, "Town Code")) { #if Town Code is found, populate it
-  #   town_code_col_select <- "Town Code"
-  # } else if (identical(town_code_col_select_grep, "Code")) { #if Code is found, populate it
-  #   town_code_col_select <- "Code"
-  # } else if (identical(character(0), town_code_col_select_grep)) { #if neither is found, set it to NA, will be imputed later
-  #   NA_data <- get(get_updated_only[i])
-  #   NA_data$"Town Code" <- NA
-  #   town_code_col_select <- "Town Code"
-  # }
+  #assign town
+  town_col <- col_names[1]
   
-  #search for "Town" 
-  town_col <- c("Town Name", "Town") #OR
-  town_col_select_grep <- grep(paste(town_col, collapse = "|"), col_names, value=T)
-  
-  if (identical(town_col_select_grep, "Town Name")) { #if Town Name is found, populate it
-    town_col_select <- "Town Name"
-  } else if (identical(town_col_select_grep, "Town")) { #if Town is found, populate it
-    town_col_select <- "Town"
-  } else if (identical(character(0), town_col_select_grep)) { #if neither is found, set it to NA, will be imputed later
-    NA_data <- get(get_updated_only[i])
-    NA_data$"Town Name" <- NA
-    town_col_select <- "Town Name"
-  } 
-  
-  #search for "Gross Commercial Grand List" only picks columns that are exactly "Commercial" or exactly "100"
+  #search for "Gross Commercial Grand List" 
   commercial_col <- c("Commercial$", "100$") #OR
-  commercial_col_select <- grep(paste(commercial_col, collapse = "|"), col_names, value=T)
-  # if ( identical(commercial_col, "Commercial")) {
-  #   commercial_col_select <- "Commercial"
-  # } else if ( identical(commercial_col, "100")) {
-  #   commercial_col_select <- "100"
-  # } 
+  commercial_col_select <- grep(paste(commercial_col, collapse = "|"), col_names, value=T, ignore.case=T)
 
   #search for "Gross Industrial Grand List"	 
   industrial_col <- c("Industrial$", "200$") #OR
-  industrial_col_select <- grep(paste(industrial_col, collapse = "|"), col_names, value=T)
-  # if ( identical(industrial_col, "Industrial")) {
-  #   industrial_col_select <- "Industrial"
-  # } else if ( identical(industrial_col, "200")) {
-  #   industrial_col_select <- "200"
-  # } 
-  
+  industrial_col_select <- grep(paste(industrial_col, collapse = "|"), col_names, value=T, ignore.case=T)
+
   #search for "Gross Residential Grand List"	    
   residential_col <- c("Residential$", "300$") #OR
-  residential_col_select <- grep(paste(residential_col, collapse = "|"), col_names, value=T)
-  # if ( identical(residential_col, "Residential")) {
-  #   residential_col_select <- "Residential"
-  # } else if ( identical(residential_col, "300")) {
-  #   residential_col_select <- "300"
-  # } 
-  
+  residential_col_select <- grep(paste(residential_col, collapse = "|"), col_names, value=T, ignore.case=T)
+
   #search for "Gross Real"
-#####Manually updated 195_list.xlsx to have "Total Real" as column header
-  gross_real_cols <- c("Total Real$")
-  gross_real_cols_select <- grep(paste(gross_real_cols, collapse = "|"), col_names, value=T)
-  # if (identical(gross_real_cols, "Total Real")) { #if Town Name is found, populate it
-  #   gross_real_cols_select <- "Total Real"
-  # } else if (identical(character(0), gross_real_cols)) { #if neither is found, set it to NA, will be imputed later
-  #   #NA_data <- get(get_updated_only[i])
-  #   NA_data$"Total Real" <- NA
-  #   gross_real_cols_select <- "Total Real"
-  # } 
+  #####Manually updated 1995_list.xlsx to have "Total Real" as column header, 2008: 'Real Exemptions' header
+  gross_real_cols <- c("TotalReal", "Total_Real", "2005 Real", "Total Real")
+  #takes all columns that include gross_real_cols but excludes those that contain "Tax Property Exemptions"
+  gross_real_cols_select <- intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Tax Property Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
   #search for "Gross Motor Vehicle"
-  gross_mv_cols <- c("^Motor$", "^MV$", "Total MV$") #OR
-  gross_mv_cols_select <- grep(paste(gross_mv_cols, collapse = "|"), col_names, value=T)
-  # if ( identical(gross_mv_cols, "Motor")) {
-  #   gross_mv_cols_select <- "Motor"
-  # } else if ( identical(gross_mv_cols, "MV")) {
-  #   gross_mv_cols_select <- "MV"
-  # } 
+  gross_mv_cols <- c("Motor$", "^Total MV$", "Motor Vehicle$", "2005 MV", "Total Gross MV") #OR
+  gross_mv_cols_select <- grep(paste(gross_mv_cols, collapse = "|"), col_names, value=T, ignore.case=T)
 
-  #search for "Gross Personal Property" 
-  gross_pp_cols <- c("Total Personal Property$", "^Personal$", "^Pers$", "^Perp$",  "Total[Real]") #OR
-  gross_pp_cols_select <- grep(paste(gross_pp_cols, collapse = "|"), col_names, value=T)
-
-
-    if (     identical(character(0), town_col_select_grep)     ) {
-      final_columns <- NA_data[, c(
-                               #town_code_col_select_grep, 
-                               town_col_select_grep, 
-                               commercial_col_select, 
-                               industrial_col_select,
-                               residential_col_select,
-                               #gross_total_col_select,
-                               gross_real_cols_select,
-                               gross_mv_cols_select,
-                               gross_pp_cols_select,
-                               "Year"
-                               )]
-    } else {
-      final_columns <- get(get_updated_only[i])[, c(
-                                                #town_code_col_select_grep, 
-                                                town_col_select_grep, 
-                                                commercial_col_select, 
+  # #search for "Gross Personal Property" 
+  gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "PP$", "Personal Prop") #OR
+  gross_pp_cols_select <- intersect(grep(paste(gross_pp_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Net|Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
+  
+  final_columns <- get(get_updated_only[i])[, c(town_col,
+                                                commercial_col_select,
                                                 industrial_col_select,
                                                 residential_col_select,
-                                                #gross_total_col_select,
                                                 gross_real_cols_select,
                                                 gross_mv_cols_select,
                                                 gross_pp_cols_select,
-                                                "Year"
-                                                )]
-    }
- 
-    names(final_columns) <- c(
-                            #"Town Code", 
-                            "Town", 
+                                                "Year")]
+  
+  names(final_columns) <- c("Town Code",
                             "Gross Commerical Grand List", 
                             "Gross Industrial Grand List", 
                             "Gross Residental Grand List", 
-                            #"Total Gross Grand List",
                             "Gross Real",
                             "Gross Motor Vehicle",
                             "Gross Personal Property",
                             "Year")
-    assign(paste0("data_", i), final_columns)
+  
+  assign(paste0("data_", i), final_columns)
   
 }
 
+dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
+final <- grep("^data", dfs, value=T)
 
-for (i in 1:length(final_columns)) {
-  all_GL_data <- rbind(all_GL_data, get(final_columns[i]))
+final <- final[order(nchar(final), final)]
+
+GL_data <- data.frame(stringsAsFactors=F)
+
+for (i in 1:length(final)) {
+  GL_data <- rbind(GL_data, get(final[i]))
 }
 
+colnames(GL_data)[1] <- "TownCode"
 
-#rm(list=ls(pattern="GLdata_"))
+town_code_xwalk_file <-file.path(getwd(), "raw", "components", "town_town-code_crosswalk.csv")
+town_code_xwalk <- read.csv(town_code_xwalk_file, header=T, stringsAsFactors=F)
 
+coded_GL_data <- merge(town_code_xwalk, GL_data, by = "TownCode")
 
-#municipal_grand_list-processing.R script should now source in 'collatedGLComponents.csv'
+coded_GL_data$`TownCode` <- NULL
+
+all_GL_data <- arrange(coded_GL_data, Year)
+
+all_GL_data$"Gross Real" <- as.numeric(all_GL_data$"Gross Real") 
+all_GL_data$"Gross Motor Vehicle" <- as.numeric(all_GL_data$"Gross Motor Vehicle") 
+all_GL_data$"Gross Personal Property" <- as.numeric(all_GL_data$"Gross Personal Property") 
+
+all_GL_data$"Total Gross Grand List" <- NA
+all_GL_data$"Total Gross Grand List" <- all_GL_data$"Gross Real" + all_GL_data$"Gross Motor Vehicle" + all_GL_data$"Gross Personal Property" 
+
+#corrected year
+all_GL_data_2014 <- all_GL_data[all_GL_data$Year == "SFY 2014-2015",]
+
+all_GL_data <- all_GL_data[,c(
+                              "Town",                       
+                              "Gross Residental Grand List",
+                              "Gross Commerical Grand List",
+                              "Gross Industrial Grand List",
+                              "Total Gross Grand List",
+                              "Year"            
+                              )]
+
+# Write to File
+write.table(
+  all_GL_data,
+  file.path(getwd(), "data", "componentGL.csv"),
+  sep = ",",
+  row.names = F
+)
+
+#municipal_grand_list-processing.R script should now source in 'componentGL.csv'
 
 

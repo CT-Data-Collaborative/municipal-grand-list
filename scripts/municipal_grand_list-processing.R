@@ -83,19 +83,16 @@ all_data <- round_df(all_data, 0)
 
 #Merge in GL Totals from component files
 
-#source in collatedGLComponents.csv
+#source in componentGL.csv
+componentGL_file <-file.path(getwd(), "raw", "components", "componentGL.csv")
+componentGL <- read.csv(componentGL_file, header=T, stringsAsFactors=F)
 
 #append new data
-#save updated components csv back out to repo
+#save updated components csv back out to raw repo
 
 #use updated components csv as a resource in this script
 from newly added folder
 read in file name like 'gl components'
-
-read in 
-
-
-
 
 #Create calculated columns
 
