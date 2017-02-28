@@ -20,15 +20,19 @@ sub_folders <- list.files()
 data_location <- grep("raw", sub_folders, value=T)
 path <- (paste0(getwd(), "/", data_location, "/", "components"))
 #grabs all csvs (even not FISCIN data)
-all_xls <- dir(path, pattern = ".xls") 
+all_xls <- dir(path, pattern = ".xls")
+#removing 2013 list (now in OPM database, going to use updated file)
+last_xls <- dir(path, pattern = "2013")
+all_xls <- all_xls[!all_xls %in% last_xls]
+
 
 #Step 1: Bring in all years, correct sheet from xls
 #bring all files into working environment
 
 #all the years where we need to read in sheet 3
-toMatch1 <- c("2002")
+sheet_match <- c("2002")
 for(i in 1:length(all_xls)) {
-  if (grepl(paste(toMatch1, collapse="|"), all_xls[i]))
+  if (grepl(paste(sheet_match, collapse="|"), all_xls[i]))
     current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=3, skip=0))
   else
     current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=1, skip=0))
@@ -37,15 +41,13 @@ for(i in 1:length(all_xls)) {
 
 
 #Step 2: With all years in, now remove duplicate header
-#cycle through all df, remove duplicate headers
-
 #2a: all years where we need to remove 2nd row
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
 get_GLdata_only <- grep("^GLdata", dfs, value=T)
-toMatch <- c("1995","2004","2005","2006","2007","2008")
+row_match1 <- c("1995","2004","2005","2006","2007","2008")
 
 for(i in 1:length(get_GLdata_only)) {
-  if (grepl(paste(toMatch, collapse="|"), get_GLdata_only[i]))
+  if (grepl(paste(row_match1, collapse="|"), get_GLdata_only[i]))
     current_file <- get(get_GLdata_only[i])[-c(1), ]
   else
     current_file <- get(get_GLdata_only[i])
@@ -55,10 +57,10 @@ for(i in 1:length(get_GLdata_only)) {
 #2b: all years where we need to set second row to header
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
 get_updated_only <- grep("^updated", dfs, value=T)
-toMatch2 <- c("2009", "2010", "2011")
+row_match2 <- c("2009", "2010", "2011")
 
 for(i in 1:length(get_updated_only)) {
-  if (grepl(paste(toMatch2, collapse="|"), get_updated_only[i])) {
+  if (grepl(paste(row_match2, collapse="|"), get_updated_only[i])) {
     current_file <- get(get_updated_only[i])
     colnames(current_file) = current_file[1, ] # the first row will be the header
     current_file = current_file[-1, ]
@@ -70,7 +72,7 @@ for(i in 1:length(get_updated_only)) {
   }
 }    
 
-#Step 3: Add year column and only takes first 169 rows
+#Step 3: Add year column and only take first 169 rows
 for (i in 1:length(get_updated_only)) {
   current_file <- get(get_updated_only[i])
   current_file <- current_file[1:169,]
@@ -92,7 +94,7 @@ all_GL_data <- data.frame(stringsAsFactors=F)
 for (i in 1:length(get_updated_only)) {
   col_names <- colnames(get(get_updated_only[i]))
   
-  #assign town
+  #assign town (brings in town or town code)
   town_col <- col_names[1]
   
   #search for "Gross Commercial Grand List" 
@@ -121,6 +123,7 @@ for (i in 1:length(get_updated_only)) {
   gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "PP$", "Personal Prop") #OR
   gross_pp_cols_select <- intersect(grep(paste(gross_pp_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Net|Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
+  #assign correct columns to final list from each file
   final_columns <- get(get_updated_only[i])[, c(town_col,
                                                 commercial_col_select,
                                                 industrial_col_select,
@@ -130,10 +133,11 @@ for (i in 1:length(get_updated_only)) {
                                                 gross_pp_cols_select,
                                                 "Year")]
   
+  #rename the columns
   names(final_columns) <- c("Town Code",
-                            "Gross Commerical Grand List", 
+                            "Gross Commercial Grand List", 
                             "Gross Industrial Grand List", 
-                            "Gross Residental Grand List", 
+                            "Gross Residential Grand List", 
                             "Gross Real",
                             "Gross Motor Vehicle",
                             "Gross Personal Property",
@@ -143,17 +147,27 @@ for (i in 1:length(get_updated_only)) {
   
 }
 
+#Clean up
+rm(list=ls(pattern="^updated"))
+rm(list=ls(pattern="^GLdata"))
+
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
 final <- grep("^data", dfs, value=T)
 
 final <- final[order(nchar(final), final)]
 
+#create empty data frame
 GL_data <- data.frame(stringsAsFactors=F)
 
+#bind all years together
 for (i in 1:length(final)) {
   GL_data <- rbind(GL_data, get(final[i]))
 }
 
+#Clean up 
+rm(list=ls(pattern="^data"))
+
+#Step 5: Merge in town-code xwalk file to assign Town names
 colnames(GL_data)[1] <- "TownCode"
 
 town_code_xwalk_file <-file.path(getwd(), "raw", "components", "town_town-code_crosswalk.csv")
@@ -163,8 +177,9 @@ coded_GL_data <- merge(town_code_xwalk, GL_data, by = "TownCode")
 
 coded_GL_data$`TownCode` <- NULL
 
-all_GL_data <- arrange(coded_GL_data, Year)
+all_GL_data <- arrange(coded_GL_data, Year, Town)
 
+#Calculated columns
 all_GL_data$"Gross Real" <- as.numeric(all_GL_data$"Gross Real") 
 all_GL_data$"Gross Motor Vehicle" <- as.numeric(all_GL_data$"Gross Motor Vehicle") 
 all_GL_data$"Gross Personal Property" <- as.numeric(all_GL_data$"Gross Personal Property") 
@@ -172,26 +187,39 @@ all_GL_data$"Gross Personal Property" <- as.numeric(all_GL_data$"Gross Personal 
 all_GL_data$"Total Gross Grand List" <- NA
 all_GL_data$"Total Gross Grand List" <- all_GL_data$"Gross Real" + all_GL_data$"Gross Motor Vehicle" + all_GL_data$"Gross Personal Property" 
 
-#corrected year
-all_GL_data_2014 <- all_GL_data[all_GL_data$Year == "SFY 2014-2015",]
+#Create Subset of corrected year
+#all_GL_data_2014 <- all_GL_data[all_GL_data$Year == "SFY 2014-2015",]
 
+#Rename columns
 all_GL_data <- all_GL_data[,c(
                               "Town",                       
-                              "Gross Residental Grand List",
-                              "Gross Commerical Grand List",
+                              "Gross Residential Grand List",
+                              "Gross Commercial Grand List",
                               "Gross Industrial Grand List",
                               "Total Gross Grand List",
                               "Year"            
                               )]
 
-# Write to File
+all_GL_data<- arrange(all_GL_data, Year, Town)
+
+#Clean up
+rm(current_file)
+rm(coded_GL_data)
+rm(final_columns)
+rm(GL_data)
+rm(town_code_xwalk)
+
+# Write to File 
 write.table(
   all_GL_data,
-  file.path(getwd(), "data", "componentGL.csv"),
+  file.path(getwd(), "raw", "components", "componentGL_2014.csv"),
   sep = ",",
   row.names = F
 )
 
+rm(all_GL_data)
+
+#In the future, componentGL.csv, componentGL_latest.csv, and town_town-code_crosswalk.csv should be the only files in raw/components
 #municipal_grand_list-processing.R script should now source in 'componentGL.csv'
 
 
