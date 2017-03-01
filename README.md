@@ -1,5 +1,7 @@
 Municipal-Grand-List
 
+[![Build Status](https://travis-ci.org/CT-Data-Collaborative/municipal-debt.svg?branch=master)](https://travis-ci.org/CT-Data-Collaborative/municipal-grand-list)
+
 Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates.
 
 ## License MIT
