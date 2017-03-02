@@ -162,7 +162,7 @@
 		  		"Measure Type": "Number",
 		  		"Town": "Andover",
 		  		"Year": ["SFY 2000-2001"],
-		  		"Variable": "Bonded Regional School District Debt"
+		  		"Variable": "Actual Mill Rate"
         },
 		  	"type": "object"
       }, 
