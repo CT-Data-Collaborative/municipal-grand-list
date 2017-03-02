@@ -1,5 +1,5 @@
 {
-  "name": "municipal_grand_list",
+  "name": "municipal-grand-list",
   "datapackage_version": "1.0-beta.18",
   "title": "Municipal-Grand-List",
   "description": "Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates.",
@@ -11,7 +11,7 @@
     "id": "odc-pddl"
   }],
   "sources": [{
-    "name": "US Census",
+    "name": "ctopm",
     "web": ""
   }],
   "author":[ {
@@ -20,116 +20,315 @@
     "web": "http://ctdata.org"
   }],
   "contributor": [],
-  "resources": [
-    {
-      "path": "data/data.csv",
-      "format": "csv",
-      "schema": {
-        "fields": [
-          {
-            "name": "Town",
-            "type": "string",
-            "constraints": {
-              "enum": ["Town", "County", "Town/County", "District", "Other"]
-            },
-            "dimension": false
-          },
-          {
-            "name": "FIPS",
-            "type": "string",
-            "dimension": false
-          },
-          {
-            "name": "Year",
-            "type": "string",
-            "dimension": false
-          },
-          {
-            "name": "Measure Type",
-            "type": "string",
-            "dimension": true
-          },
-          {
-            "name": "Variable",
-            "type": "string",
-            "dimension": false
-          },
-          {
-            "name": "Value",
-            "type": "number",
-            "dimension": false
-          }
+  "resources": [{
+    "path": "data/municipal_grand_list_data.csv",
+    "format": "csv",
+    "schema": {
+      "fields": [{
+        "name": "Town",
+        "type": "string",
+        "dimension": false
+      }, {
+        "name": "FIPS",
+        "type": "string",
+        "dimension": false
+      }, {
+        "name": "Year",
+        "type": "string",
+        "dimension": false
+      }, {
+        "name": "Measure Type",
+        "type": "string",
+        "dimension": true,
+        "constraints": {
+			    "enum": [
+			      "Number", 
+			      "Percent", 
+			      "Mill Rate"
+			    ]
+			  }
+      }, {
+        "name": "Variable",
+        "type": "string",
+        "dimension": true, 
+        "constraints": {
+				  "enum": [
+				    "Actual Mill Rate",
+            "Equalized Mill Rate",
+            "Equalized Net Grand List",
+            "Equalized Net Grand List per Capita",
+            "Gross Commercial Grand List",
+            "Gross Industrial Grand List",
+            "Gross Residential Grand List",
+            "Net Grand List",
+            "Total Gross Grand List",
+            "Commercial and Industrial Share of Total Net Grand List",
+            "Equalized Net Grand List per Capita as Percent of State Average"
+          ]
+			  }
+      }, {
+        "name": "Value",
+        "type": "number",
+        "dimension": false
+      }]
+    }
+    }],
+    "last_modified": "02/15/2017",
+    "ckan_extras": {
+      "full_description": {
+        "ckan_name": "Full Description",
+        "value": "tate Fiscal Years run from July 1 through the following June 30. Population estimates used to calculate Per Capita measures were derived using the Connecticut Department of Public Health estimates as of July 1 of the year ending the State Fiscal Year - ie. SFY 2012-2013 uses the population estimate for July 1, 2013. Grand List indicators are derived from October of the year preceding the State Fiscal Year - ie SFY 2012-2013 uses Grand List data from October 2011. Due to the required time and resources necessary for re-evalutaion, municipalities are evaluated for Grand List figures on a rolling basis. Equalized Net Grand List values are derived as a way of giving an equal ground for comparison to all municipalities, regardless of when that municipality is scheduled to be re-evaluated next. Equalized Mill Rates are calculated using the Equalized Net Grand List. Equalized Net Grand List figures are a measure of only the taxable real and personal property, i.e. the gross property estimate minus any tax exempt properties. Mill Rates are the amount of tax payable per $1000 of value for a given property. Mill Rates are presented as thousandths of a dollar, e.g. a Mill Rate of 1 means every $1000 of value would equal $1 of tax. These rates are calculated by taking the projected revenue from taxable property, dividing it by the total net worth of taxable property (Equalized Net Grand List) and multiplying by 1000.",
+        "type": "string"
+      },
+      "suppression": {
+        "ckan_name": "Suppression",
+        "value": "",
+        "type": "string"
+      },
+      "technical_notes": {
+        "ckan_name": "Technical Notes",
+        "value": "None",
+        "type": "string"
+      },
+      "numerator": {
+        "ckan_name": "Numerator",
+        "value": "For Equalized Mill Rate, the numerator is the Current Year Adjusted Taxes Collectible for the selected municipality and year. For Equalized Net Grand List per Capita, the numerator is the Equalized Net Grand List for the selected municipality and year. For Equalized Net Grand List per Capita as Percent of State Average, the numerator is the Equalized Net Grand List per Capita for the selected municipality and year.",
+        "type": "string"
+      },   
+      "denominator": {
+        "ckan_name": "Denominator",
+        "value": "For Equalized Mill Rate, the denominator is the Equalized Net Grand List for the selected municipality and year. For Equalized Net Grand List per Capita, the denominator is the total Population for the selected municipality as of July 1 of the end year for the selected State Fiscal Year (eg July 1, 2013 for SFY 2012-2013).  For Equalized Net Grand List per Capita as Percent of State Average, the denominator is the quotient of asum of all Equalized Net Grand List totals for every municipality divided by the sum of their respective Populations for the selected year.",
+        "type": "string"
+      },
+      "domain": {
+        "ckan_name": "Domain",
+        "value": "Civic Vitality",
+        "type": "string"
+      },
+      "subdomain": {
+        "ckan_name": "Subdomain",
+        "value": "Public Finance",
+        "type": "string"
+      },
+      "geography": {
+        "ckan_name": "Geography",
+        "value": "Town",
+        "type": "string",
+        "constraints": {
+          "enum": ["Town", "County", "Town/County", "District", "Other"]
+        }
+      },
+      "frequency": {
+        "ckan_name": "Frequency",
+        "value": "Annual",
+        "type": "string"
+      },
+      "years_in_catalog": {
+        "ckan_name": "Years in Catalog",
+        "value": ["SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004", 
+                  "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008", 
+                  "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012", 
+                  "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015"],
+        "type": "array"
+      },
+      "latest_year": {
+        "ckan_name": "Latest Year Available from Source",
+        "value": "SFY 2014-2015",
+        "type": "string"
+      },
+      "disabled_views": {
+        "ckan_name": "Disabled Views",
+        "value": [],
+        "type": "array",
+        "constraings": {
+          "enum": ["map", "table", "bar", "line"]
+        }
+      },
+      "units": {
+        "ckan_name": "Units",
+        "value": {
+          "Number": "",
+          "Percent": "%"
+        }
+      },
+      "expected_number_of_geographies": {
+		  	"ckan_name": "Expected Number of Unique Geographies",
+		  	"value": 169,
+		  	"type": "string"
+		  },
+      "default": {
+        "ckan_name": "Default",
+		  	"value": {
+		  		"Measure Type": "Number",
+		  		"Town": "Andover",
+		  		"Year": ["SFY 2000-2001"],
+		  		"Variable": "Actual Mill Rate"
+        },
+		  	"type": "object"
+      }, 
+      "socrata": {
+        "ckan_name": "Socrata",
+        "value": "True",
+        "type": "string"
+      }
+    },
+    "spot_checks": [
+      {
+        "type": "$lookup",
+        "filter": {  
+          "Town": "Bridgeport", 
+          "Year": "SFY 2013-2014",
+          "Variable": "Equalized Net Grand List per Capita as Percent of State Average",
+          "Measure Type":"Percent"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "float",
+          "value": 38.99
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Danbury", 
+          "Year": "SFY 2005-2006",
+          "Variable": "Equalized Net Grand List per Capita",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 138837
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Killingworth", 
+          "Year": "SFY 2003-2004",
+          "Variable": "Commercial and Industrial Share of Total Net Grand List",
+          "Measure Type":"Percent"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "float",
+          "value": 2.69
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Wolcott", 
+          "Year": "SFY 2002-2003",
+          "Variable": "Equalized Mill Rate", 
+          "Measure Type":"Mill Rate"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "float",
+          "value": 20.59
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Andover",
+          "Year": "SFY 2000-2001", 
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 141623628
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Ansonia",
+          "Year": "SFY 2001-2002", 
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 627836155
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Ashford",
+          "Year": "SFY 2002-2003", 
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 175847320
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Avon",
+          "Year": "SFY 2003-2004", 
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 1681919030
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Barkhamsted",
+          "Year": "SFY 2004-2005", 
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 285462872
+        }
+      }, 
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Glastonbury",
+          "Year": "SFY 2014-2015", 
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 3854054415
+        }
+      } 
+    ],
+    "dimension_groups": [
+      {
+        "Variable": [
+          "Actual Mill Rate",
+          "Equalized Mill Rate",
+          "Equalized Net Grand List",
+          "Equalized Net Grand List per Capita",
+          "Gross Commercial Grand List",
+          "Gross Industrial Grand List",
+          "Gross Residential Grand List",
+          "Net Grand List",
+          "Total Gross Grand List",
+          "Commercial and Industrial Share of Total Net Grand List",
+          "Equalized Net Grand List per Capita as Percent of State Average"
         ]
       }
-    }
-  ],
-  "last_modified": "02/15/2017",
-  "ckan_extras": {
-    "full_description": {
-      "ckan_name": "Full Description",
-      "value": "tate Fiscal Years run from July 1 through the following June 30. Population estimates used to calculate Per Capita measures were derived using the Connecticut Department of Public Health estimates as of July 1 of the year ending the State Fiscal Year - ie. SFY 2012-2013 uses the population estimate for July 1, 2013. Grand List indicators are derived from October of the year preceding the State Fiscal Year - ie SFY 2012-2013 uses Grand List data from October 2011. Due to the required time and resources necessary for re-evalutaion, municipalities are evaluated for Grand List figures on a rolling basis. Equalized Net Grand List values are derived as a way of giving an equal ground for comparison to all municipalities, regardless of when that municipality is scheduled to be re-evaluated next. Equalized Mill Rates are calculated using the Equalized Net Grand List. Equalized Net Grand List figures are a measure of only the taxable real and personal property, i.e. the gross property estimate minus any tax exempt properties. Mill Rates are the amount of tax payable per $1000 of value for a given property. Mill Rates are presented as thousandths of a dollar, e.g. a Mill Rate of 1 means every $1000 of value would equal $1 of tax. These rates are calculated by taking the projected revenue from taxable property, dividing it by the total net worth of taxable property (Equalized Net Grand List) and multiplying by 1000.",
-      "type": "string",
-    },
-    "suppression": {
-      "ckan_name": "Suppression",
-      "value": "",
-      "type": "string"
-    },
-    "technical_notes": {
-      "ckan_name": "Technical Notes",
-      "value": "None",
-      "type": "string",
-    },
-    "domain": {
-      "ckan_name": "Domain",
-      "value": "Civic Vitality",
-      "type": "string",
-    },
-    "subdomain": {
-      "ckan_name": "Subdomain",
-      "value": "Public Finance",
-      "type": "string",
-    },
-    "geography": {
-      "ckan_name": "Geography",
-      "value": "Town",
-      "type": "string",
-      "constraints": {
-        "enum": ["Town", "County", "Town/County", "District", "Other"]
-      }
-    },
-    "frequency": {
-      "ckan_name": "Frequency",
-      "value": "Annual",
-      "type": "string"
-    },
-    "years_in_catalog": {
-      "ckan_name": "Years in Catalog",
-      "value": []
-      "type": "array",
-    },
-    "latest_year": {
-      "ckan_name": "Latest Year Available from Source",
-      "value": "SFY 2015-2016",
-      "type": "string",
-    },
-    "disabled_views": {
-      "ckan_name": "Disabled Views",
-      "value": [],
-      "type": "array",
-      "constraings": {
-        "enum": ["map", "table", "bar", "line"]
-      }
-    },
-    "units": {
-      "ckan_name": "Units",
-      "value": {
-        "Number": "",
-        "Percent": "%"
-      }
-    },
-    "default": {},
-  },
-  "spot_tests": [],
-  "dimension_groups": []
+   ]
 }

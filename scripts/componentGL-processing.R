@@ -21,10 +21,6 @@ data_location <- grep("raw", sub_folders, value=T)
 path <- (paste0(getwd(), "/", data_location, "/", "components"))
 #grabs all csvs (even not FISCIN data)
 all_xls <- dir(path, pattern = ".xls")
-#removing 2013 list (now in OPM database, going to use updated file)
-last_xls <- dir(path, pattern = "2013")
-all_xls <- all_xls[!all_xls %in% last_xls]
-
 
 #Step 1: Bring in all years, correct sheet from xls
 #bring all files into working environment
@@ -38,7 +34,6 @@ for(i in 1:length(all_xls)) {
     current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=1, skip=0))
   assign(paste0("GLdata_", substr(all_xls[i], 1, 4)), current_file)
 }
-
 
 #Step 2: With all years in, now remove duplicate header
 #2a: all years where we need to remove 2nd row
@@ -113,10 +108,10 @@ for (i in 1:length(get_updated_only)) {
   #####Manually updated 1995_list.xlsx to have "Total Real" as column header, 2008: 'Real Exemptions' header
   gross_real_cols <- c("TotalReal", "Total_Real", "2005 Real", "Total Real")
   #takes all columns that include gross_real_cols but excludes those that contain "Tax Property Exemptions"
-  gross_real_cols_select <- intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Tax Property Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
+  gross_real_cols_select <- intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Property Tax Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
   #search for "Gross Motor Vehicle"
-  gross_mv_cols <- c("Motor$", "^Total MV$", "Motor Vehicle$", "2005 MV", "Total Gross MV") #OR
+  gross_mv_cols <- c("Motor$", "Total MV$", "Motor Vehicle$", "2005 MV", "Total Gross MV") #OR
   gross_mv_cols_select <- grep(paste(gross_mv_cols, collapse = "|"), col_names, value=T, ignore.case=T)
 
   # #search for "Gross Personal Property" 
@@ -203,16 +198,12 @@ all_GL_data <- all_GL_data[,c(
 all_GL_data<- arrange(all_GL_data, Year, Town)
 
 #Clean up
-rm(current_file)
-rm(coded_GL_data)
-rm(final_columns)
-rm(GL_data)
-rm(town_code_xwalk)
+rm(current_file, coded_GL_data, final_columns, GL_data, town_code_xwalk)
 
 # Write to File 
 write.table(
   all_GL_data,
-  file.path(getwd(), "raw", "components", "componentGL_2014.csv"),
+  file.path(getwd(), "raw", "components", "componentGL_2015.csv"),
   sep = ",",
   row.names = F
 )
