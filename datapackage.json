@@ -14,11 +14,11 @@
     "name": "ctopm",
     "web": ""
   }],
-  "author":[ {
+  "author":{
     "name": "Jenna Daly",
     "email": "jdaly@ctdata.org",
     "web": "http://ctdata.org"
-  }],
+  },
   "contributor": [],
   "resources": [{
     "path": "data/municipal_grand_list_data.csv",
@@ -42,15 +42,15 @@
         "dimension": true,
         "constraints": {
 			    "enum": [
-			      "Number", 
-			      "Percent", 
+			      "Number",
+			      "Percent",
 			      "Mill Rate"
 			    ]
 			  }
       }, {
         "name": "Variable",
         "type": "string",
-        "dimension": true, 
+        "dimension": true,
         "constraints": {
 				  "enum": [
 				    "Actual Mill Rate",
@@ -94,7 +94,7 @@
         "ckan_name": "Numerator",
         "value": "For Equalized Mill Rate, the numerator is the Current Year Adjusted Taxes Collectible for the selected municipality and year. For Equalized Net Grand List per Capita, the numerator is the Equalized Net Grand List for the selected municipality and year. For Equalized Net Grand List per Capita as Percent of State Average, the numerator is the Equalized Net Grand List per Capita for the selected municipality and year.",
         "type": "string"
-      },   
+      },
       "denominator": {
         "ckan_name": "Denominator",
         "value": "For Equalized Mill Rate, the denominator is the Equalized Net Grand List for the selected municipality and year. For Equalized Net Grand List per Capita, the denominator is the total Population for the selected municipality as of July 1 of the end year for the selected State Fiscal Year (eg July 1, 2013 for SFY 2012-2013).  For Equalized Net Grand List per Capita as Percent of State Average, the denominator is the quotient of asum of all Equalized Net Grand List totals for every municipality divided by the sum of their respective Populations for the selected year.",
@@ -125,9 +125,9 @@
       },
       "years_in_catalog": {
         "ckan_name": "Years in Catalog",
-        "value": ["SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004", 
-                  "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008", 
-                  "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012", 
+        "value": ["SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004",
+                  "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008",
+                  "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012",
                   "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015"],
         "type": "array"
       },
@@ -165,7 +165,7 @@
 		  		"Variable": "Actual Mill Rate"
         },
 		  	"type": "object"
-      }, 
+      },
       "socrata": {
         "ckan_name": "Socrata",
         "value": "True",
@@ -175,8 +175,8 @@
     "spot_checks": [
       {
         "type": "$lookup",
-        "filter": {  
-          "Town": "Bridgeport", 
+        "filter": {
+          "Town": "Bridgeport",
           "Year": "SFY 2013-2014",
           "Variable": "Equalized Net Grand List per Capita as Percent of State Average",
           "Measure Type":"Percent"
@@ -186,11 +186,11 @@
           "number type": "float",
           "value": 38.99
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
-          "Town": "Danbury", 
+          "Town": "Danbury",
           "Year": "SFY 2005-2006",
           "Variable": "Equalized Net Grand List per Capita",
           "Measure Type":"Number"
@@ -200,11 +200,11 @@
           "number type": "int",
           "value": 138837
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
-          "Town": "Killingworth", 
+          "Town": "Killingworth",
           "Year": "SFY 2003-2004",
           "Variable": "Commercial and Industrial Share of Total Net Grand List",
           "Measure Type":"Percent"
@@ -214,13 +214,13 @@
           "number type": "float",
           "value": 2.69
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
-          "Town": "Wolcott", 
+          "Town": "Wolcott",
           "Year": "SFY 2002-2003",
-          "Variable": "Equalized Mill Rate", 
+          "Variable": "Equalized Mill Rate",
           "Measure Type":"Mill Rate"
         },
         "expected": {
@@ -228,12 +228,12 @@
           "number type": "float",
           "value": 20.59
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
           "Town": "Andover",
-          "Year": "SFY 2000-2001", 
+          "Year": "SFY 2000-2001",
           "Variable": "Total Gross Grand List",
           "Measure Type":"Number"
         },
@@ -242,12 +242,12 @@
           "number type": "int",
           "value": 141623628
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
           "Town": "Ansonia",
-          "Year": "SFY 2001-2002", 
+          "Year": "SFY 2001-2002",
           "Variable": "Total Gross Grand List",
           "Measure Type":"Number"
         },
@@ -256,12 +256,12 @@
           "number type": "int",
           "value": 627836155
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
           "Town": "Ashford",
-          "Year": "SFY 2002-2003", 
+          "Year": "SFY 2002-2003",
           "Variable": "Total Gross Grand List",
           "Measure Type":"Number"
         },
@@ -270,12 +270,12 @@
           "number type": "int",
           "value": 175847320
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
           "Town": "Avon",
-          "Year": "SFY 2003-2004", 
+          "Year": "SFY 2003-2004",
           "Variable": "Total Gross Grand List",
           "Measure Type":"Number"
         },
@@ -284,12 +284,12 @@
           "number type": "int",
           "value": 1681919030
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
           "Town": "Barkhamsted",
-          "Year": "SFY 2004-2005", 
+          "Year": "SFY 2004-2005",
           "Variable": "Total Gross Grand List",
           "Measure Type":"Number"
         },
@@ -298,12 +298,12 @@
           "number type": "int",
           "value": 285462872
         }
-      }, 
+      },
       {
         "type": "$lookup",
         "filter": {
           "Town": "Glastonbury",
-          "Year": "SFY 2014-2015", 
+          "Year": "SFY 2014-2015",
           "Variable": "Total Gross Grand List",
           "Measure Type":"Number"
         },
@@ -312,7 +312,7 @@
           "number type": "int",
           "value": 3854054415
         }
-      } 
+      }
     ],
     "dimension_groups": [
       {
