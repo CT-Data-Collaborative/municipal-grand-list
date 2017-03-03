@@ -14,11 +14,11 @@
     "name": "ctopm",
     "web": ""
   }],
-  "author":{
+  "author":[{
     "name": "Jenna Daly",
     "email": "jdaly@ctdata.org",
     "web": "http://ctdata.org"
-  },
+  }],
   "contributor": [],
   "resources": [{
     "path": "data/municipal_grand_list_data.csv",
