@@ -1,6 +1,8 @@
 library(dplyr)
 library(RCurl)
-#library(stringi)
+library(devtools)
+library(datapkg)
+
 
 ##################################################################
 #
@@ -333,8 +335,9 @@ combined_final_long$"Measure Type"[which(combined_final_long$Variable %in% c("Ac
                                                                              "Equalized Mill Rate"))] <- "Mill Rate"                                        
 
 #add FIPS (using raw URL from GitHub)
-common <- ("https://raw.githubusercontent.com/CT-Data-Collaborative/ctdata-catalog/master/Common")
-fips <- read.csv(file.path(common, "Geography", "town_fips.csv?token=AIOGoRH4fVSunJt624d-givXFj3w3XIwks5YvyLNwA%3D%3D"))
+town_fips_dp_URL <- 'https://raw.githubusercontent.com/CT-Data-Collaborative/ct-town-list/master/datapackage.json'
+town_fips_dp <- datapkg_read(path = town_fips_dp_URL)
+fips <- (town_fips_dp$data[[1]])
 
 merge_long_fips <- merge(combined_final_long, fips, all=T)
 
@@ -355,10 +358,5 @@ write.table(
   na = "",
   row.names = F
 )
-
-
-
-
-
 
 
