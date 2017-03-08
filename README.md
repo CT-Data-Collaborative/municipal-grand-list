@@ -4,6 +4,8 @@ Municipal-Grand-List
 
 Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates.
 
+Data Source: <https://data.ct.gov/Government/Municipal-Fiscal-Indicators-2011-2015-MS-Access-da/uij9-wzqw>
+
 ## License MIT
 
 ## Getting Setup
