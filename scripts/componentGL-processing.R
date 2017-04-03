@@ -39,7 +39,7 @@ for(i in 1:length(all_xls)) {
 #2a: all years where we need to remove 2nd row
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
 get_GLdata_only <- grep("^GLdata", dfs, value=T)
-row_match1 <- c("1995","2004","2005","2006","2007","2008")
+row_match1 <- c("1995","2004","2006","2007","2008")
 
 for(i in 1:length(get_GLdata_only)) {
   if (grepl(paste(row_match1, collapse="|"), get_GLdata_only[i]))
@@ -52,7 +52,7 @@ for(i in 1:length(get_GLdata_only)) {
 #2b: all years where we need to set second row to header
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
 get_updated_only <- grep("^updated", dfs, value=T)
-row_match2 <- c("2009", "2010", "2011")
+row_match2 <- c("2005", "2009", "2010", "2011")
 
 for(i in 1:length(get_updated_only)) {
   if (grepl(paste(row_match2, collapse="|"), get_updated_only[i])) {
@@ -106,7 +106,7 @@ for (i in 1:length(get_updated_only)) {
 
   #search for "Gross Real"
   #####Manually updated 1995_list.xlsx to have "Total Real" as column header, 2008: 'Real Exemptions' header
-  gross_real_cols <- c("TotalReal", "Total_Real", "2005 Real", "Total Real")
+  gross_real_cols <- c("TotalReal", "Total_Real", "Total Real", "Real Total")
   #takes all columns that include gross_real_cols but excludes those that contain "Tax Property Exemptions"
   gross_real_cols_select <- intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Property Tax Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
@@ -115,7 +115,7 @@ for (i in 1:length(get_updated_only)) {
   gross_mv_cols_select <- grep(paste(gross_mv_cols, collapse = "|"), col_names, value=T, ignore.case=T)
 
   # #search for "Gross Personal Property" 
-  gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "PP$", "Personal Prop") #OR
+  gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "Total Gross Perp",  "PP$", "Personal Prop") #OR
   gross_pp_cols_select <- intersect(grep(paste(gross_pp_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Net|Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
   #assign correct columns to final list from each file
@@ -165,7 +165,7 @@ rm(list=ls(pattern="^data"))
 #Step 5: Merge in town-code xwalk file to assign Town names
 colnames(GL_data)[1] <- "TownCode"
 
-town_code_xwalk_file <-file.path(getwd(), "raw", "components", "town_town-code_crosswalk.csv")
+town_code_xwalk_file <-file.path(path, "town_town-code_crosswalk.csv")
 town_code_xwalk <- read.csv(town_code_xwalk_file, header=T, stringsAsFactors=F)
 
 coded_GL_data <- merge(town_code_xwalk, GL_data, by = "TownCode")
@@ -203,14 +203,11 @@ rm(current_file, coded_GL_data, final_columns, GL_data, town_code_xwalk)
 # Write to File 
 write.table(
   all_GL_data,
-  file.path(getwd(), "raw", "components", "componentGL_2015.csv"),
+  file.path(path, "componentGL_2015.csv"),
   sep = ",",
   row.names = F
 )
 
 rm(all_GL_data)
-
-#In the future, componentGL.csv, componentGL_latest.csv, and town_town-code_crosswalk.csv should be the only files in raw/components
-#municipal_grand_list-processing.R script should now source in 'componentGL.csv'
 
 

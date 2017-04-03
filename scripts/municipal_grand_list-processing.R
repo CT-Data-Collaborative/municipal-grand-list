@@ -13,11 +13,12 @@ library(datapkg)
 ##################################################################
 
 #source componentGL to create legacy component GL list
-#source('scripts/componentGL-processing.R')
+source('scripts/componentGL-processing.R')
 
 sub_folders <- list.files()
 data_location <- grep("raw", sub_folders, value=T)
 path <- (paste0(getwd(), "/", data_location))
+year_folders <- dir(path, pattern = "2")
 #grabs all csvs (even not FISCIN data)
 all_csvs <- dir(path, recursive=T, pattern = ".csv") 
 #isolates FISCIN csvs
@@ -34,40 +35,45 @@ municipal_grand_list_data <- setNames(data.frame(matrix(ncol = 11, nrow = 0)),
                        "Population"))
 
 #read in each raw file and get ready for master combine
-for (i in 1:length(only_FISCIN)) {
-  current_file <- read.csv(paste0(path, "/", only_FISCIN[i]), stringsAsFactors=F, header=T)
-  remove_folder <- sub(".*/", "", only_FISCIN[i]) #filename
-  get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(remove_folder)), "")))
-  get_year <- get_year + 2000
-  SFY <- paste(get_year - 1, get_year, sep = "-")
-  SFY2 <- paste("SFY", SFY)
-  current_file$Year <- SFY2
-  col_names <- colnames(current_file)
-  pop_col <- grep("population", col_names, ignore.case=T, value=T)
-  NGL_col <- grep("ACGLFY", col_names, ignore.case=T, value=T)
-  #defines raw columns that we want to grab to populate final working columns
-  final_columns <- current_file[, c("Municipality", 
-                                    "Year", 
-                                    "Curr_Year_Adjusted_Taxes_Collectible",
-                                    "EGL",         
-                                    "ACMR",
-                                    NGL_col, 
-                                    pop_col)]  
-  #relabels raw columns to final working column names
-  names(final_columns) <- c("Town", 
-                            "Year", 
-                            "Current Year Adjusted Taxes Collectible",
-                            "Equalized Net Grand List",
-                            "Actual Mill Rate",
-                            "Net Grand List",
-                            "Population")
-  
-  # take out "Groton (City of)" because it is a political subdivision of groton and not the town.
-  final_columns <- final_columns[final_columns$Town != "GROTON (City of)",]
-  
-  # Add this iteration's data to main container, first removing duplicated year data
-  municipal_grand_list_data <- municipal_grand_list_data[municipal_grand_list_data$Year!=SFY2,]
-  municipal_grand_list_data <- rbind(municipal_grand_list_data, final_columns)
+for (j in 1:length(year_folders)) {
+  year_path <- (paste0(path, "/", year_folders[j]))
+  all_csvs <- dir(year_path, recursive=T, pattern = ".csv") 
+  only_FISCIN <- all_csvs[grep("FISCIN", all_csvs)] 
+  for (i in 1:length(only_FISCIN)) {
+    current_file <- read.csv(paste0(year_path, "/", only_FISCIN[i]), stringsAsFactors=F, header=T)
+    remove_folder <- sub(".*/", "", only_FISCIN[i]) #filename
+    get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(remove_folder)), "")))
+    get_year <- get_year + 2000
+    SFY <- paste(get_year - 1, get_year, sep = "-")
+    SFY2 <- paste("SFY", SFY)
+    current_file$Year <- SFY2
+    col_names <- colnames(current_file)
+    pop_col <- grep("population", col_names, ignore.case=T, value=T)
+    NGL_col <- grep("ACGLFY", col_names, ignore.case=T, value=T)
+    #defines raw columns that we want to grab to populate final working columns
+    final_columns <- current_file[, c("Municipality", 
+                                      "Year", 
+                                      "Curr_Year_Adjusted_Taxes_Collectible",
+                                      "EGL",         
+                                      "ACMR",
+                                      NGL_col, 
+                                      pop_col)]  
+    #relabels raw columns to final working column names
+    names(final_columns) <- c("Town", 
+                              "Year", 
+                              "Current Year Adjusted Taxes Collectible",
+                              "Equalized Net Grand List",
+                              "Actual Mill Rate",
+                              "Net Grand List",
+                              "Population")
+    
+    # take out "Groton (City of)" because it is a political subdivision of groton and not the town.
+    final_columns <- final_columns[final_columns$Town != "GROTON (City of)",]
+    
+    # Add this iteration's data to main container, first removing duplicated year data
+    municipal_grand_list_data <- municipal_grand_list_data[municipal_grand_list_data$Year!=SFY2,]
+    municipal_grand_list_data <- rbind(municipal_grand_list_data, final_columns)
+  }
 }
 
 #Clean up 
@@ -271,17 +277,17 @@ municipal_grand_list$"Equalized Net Grand List per Capita as Percent of State Av
 municipal_grand_list$"Equalized Net Grand List per Capita as Percent of State Average" <- round(((municipal_grand_list$"Equalized Net Grand List per Capita")/((municipal_grand_list$`Equalized Net Grand List.y`)/(municipal_grand_list$Population.y)))*100, 2)  
 
 municipal_grand_list_arranged <- select(municipal_grand_list, `Year`, `Town`, `Gross.Residential.Grand.List`, `Gross.Commercial.Grand.List`, 
-                   `Gross.Industrial.Grand.List`, `Total.Gross.Grand.List`, `Equalized Net Grand List.x`, 
-                   `Actual Mill Rate`, `Net Grand List`, `Equalized Net Grand List per Capita`, 
-                   `Commercial and Industrial Share of Total Net Grand List`, `Equalized Mill Rate`, 
-                   `Equalized Net Grand List per Capita as Percent of State Average`) %>% 
+                                                              `Gross.Industrial.Grand.List`, `Total.Gross.Grand.List`, `Equalized Net Grand List.x`, 
+                                                              `Actual Mill Rate`, `Net Grand List`, `Equalized Net Grand List per Capita`, 
+                                                              `Commercial and Industrial Share of Total Net Grand List`, `Equalized Mill Rate`, 
+                                                              `Equalized Net Grand List per Capita as Percent of State Average`) %>% 
   arrange(Town, Year)
 
 colnames(municipal_grand_list_arranged) <- c("Year", "Town", "Gross Residential Grand List", "Gross Commercial Grand List", 
-                        "Gross Industrial Grand List", "Total Gross Grand List", "Equalized Net Grand List", 
-                        "Actual Mill Rate", "Net Grand List", "Equalized Net Grand List per Capita", 
-                        "Commercial and Industrial Share of Total Net Grand List", "Equalized Mill Rate", 
-                        "Equalized Net Grand List per Capita as Percent of State Average")
+                                             "Gross Industrial Grand List", "Total Gross Grand List", "Equalized Net Grand List", 
+                                             "Actual Mill Rate", "Net Grand List", "Equalized Net Grand List per Capita", 
+                                             "Commercial and Industrial Share of Total Net Grand List", "Equalized Mill Rate", 
+                                             "Equalized Net Grand List per Capita as Percent of State Average")
 
 rm(sum_engl, sum_pop, municipal_grand_list, municipal_grand_list_data_merged)
 
