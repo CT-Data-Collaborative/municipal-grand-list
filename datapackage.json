@@ -1,7 +1,7 @@
 {
   "name": "municipal-grand-list",
   "datapackage_version": "1.0-beta.18",
-  "title": "Municipal-Grand-List",
+  "title": "Municipal Grand List",
   "description": "Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates.",
   "version": "1.0",
   "licenses": [{
@@ -21,7 +21,7 @@
   }],
   "contributor": [],
   "resources": [{
-    "path": "data/municipal_grand_list_data.csv",
+    "path": "data/municipal_grand_list_data_2001-2015.csv",
     "format": "csv",
     "schema": {
       "fields": [{
@@ -229,6 +229,34 @@
           "value": 20.59
         }
       },
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Kent",
+          "Year": "SFY 2000-2001",
+          "Variable": "Gross Industrial Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 0
+        }
+      },
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Wilton",
+          "Year": "SFY 2006-2007",
+          "Variable": "Gross Residential Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 2958242370
+        }
+      },      
       {
         "type": "$lookup",
         "filter": {

@@ -93,15 +93,15 @@ for (i in 1:length(get_updated_only)) {
   town_col <- col_names[1]
   
   #search for "Gross Commercial Grand List" 
-  commercial_col <- c("Commercial$", "100$") #OR
+  commercial_col <- c("Commercial$", "200$") #OR
   commercial_col_select <- grep(paste(commercial_col, collapse = "|"), col_names, value=T, ignore.case=T)
 
   #search for "Gross Industrial Grand List"	 
-  industrial_col <- c("Industrial$", "200$") #OR
+  industrial_col <- c("Industrial$", "300$") #OR
   industrial_col_select <- grep(paste(industrial_col, collapse = "|"), col_names, value=T, ignore.case=T)
 
   #search for "Gross Residential Grand List"	    
-  residential_col <- c("Residential$", "300$") #OR
+  residential_col <- c("Residential$", "100$") #OR
   residential_col_select <- grep(paste(residential_col, collapse = "|"), col_names, value=T, ignore.case=T)
 
   #search for "Gross Real"
@@ -196,6 +196,9 @@ all_GL_data <- all_GL_data[,c(
                               )]
 
 all_GL_data<- arrange(all_GL_data, Year, Town)
+
+#setting NAs to zero to designate no grand list available
+all_GL_data[is.na(all_GL_data)] <- 0
 
 #Clean up
 rm(current_file, coded_GL_data, final_columns, GL_data, town_code_xwalk)

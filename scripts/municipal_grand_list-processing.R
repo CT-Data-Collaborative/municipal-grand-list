@@ -100,141 +100,11 @@ municipal_grand_list_data <- arrange(municipal_grand_list_data, Year, Town)
 destfile <- paste0(path, "/", "components", "/", "componentGL_2015.csv")
 
 if (!file.exists(destfile)) {  
-  #process and create destfile
+  #process and create destfile (componentGL_processing script)
 } else {
   #set componentGL to destfile
   combined_componentGL <- read.csv(destfile, stringsAsFactors=F, header=T)
 }
-##Merge in GL Totals from component files
-#read in latest GL data
-# componentGL_file_path <-file.path(getwd(), "raw", "components")
-# legacy_GL_csvs <- dir(componentGL_file_path, pattern = "componentGL")
-# 
-# sort(legacy_GL_csvs)
-# 
-# #selects latest version of componentGL file 
-# last_GL_file <- tail(legacy_GL_csvs, 1)
-# 
-# legacy_GL_file_path <-file.path(getwd(), "raw", "components", last_GL_file)
-# legacy_GL_file <- read.csv(legacy_GL_file_path, header=T, stringsAsFactors=F)
-# 
-# #use updated components csv as a resource in this script 
-# #(each time data gets processed, update the folder it is coming from)
-# current_GL_file_path <-file.path(getwd(), "raw", "2011-2015")
-# 
-# current_GL_csv <- dir(current_GL_file_path, pattern = "^GL") 
-# 
-# for (i in 1:length(current_GL_csv)) {
-#   current_file <- read.csv(paste0(current_GL_file_path, "/", current_GL_csv[i]), stringsAsFactors=F, header=T)
-#   get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(current_GL_csv[i])), "")))
-#   SFY <- paste(get_year , get_year + 1, sep = "-")
-#   SFY2 <- paste("SFY", SFY)
-#   current_file$Year <- SFY2
-#   col_names <- colnames(current_file)
-# 
-#   #assign town (brings in town or town code)
-#   town_col <- col_names[1]
-#   
-#   #search for "Gross Commercial Grand List" 
-#   commercial_col <- c("Commercial$", "100$") #OR
-#   commercial_col_select <- grep(paste(commercial_col, collapse = "|"), col_names, value=T, ignore.case=T)
-#   
-#   #search for "Gross Industrial Grand List"	 
-#   industrial_col <- c("Industrial$", "200$") #OR
-#   industrial_col_select <- grep(paste(industrial_col, collapse = "|"), col_names, value=T, ignore.case=T)
-#   
-#   #search for "Gross Residential Grand List"	    
-#   residential_col <- c("Residential$", "300$") #OR
-#   residential_col_select <- grep(paste(residential_col, collapse = "|"), col_names, value=T, ignore.case=T)
-#   
-#   #search for "Gross Real"
-#   #####Manually updated 1995_list.xlsx to have "Total Real" as column header, 2008: 'Real Exemptions' header
-#   gross_real_cols <- c("TotalReal", "Total_Real", "2005 Real", "Total Real", "Total.Real")
-#   #takes all columns that include gross_real_cols but excludes those that contain "Tax Property Exemptions"
-#   gross_real_cols_select <- intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Tax Property Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
-#   
-#   #search for "Gross Motor Vehicle"
-#   gross_mv_cols <- c("Motor$", "^Total MV$", "Motor Vehicle$", "2005 MV", "Total Gross MV", "Total.MV") #OR
-#   gross_mv_cols_select <- grep(paste(gross_mv_cols, collapse = "|"), col_names, value=T, ignore.case=T)
-#   
-#   # #search for "Gross Personal Property" 
-#   gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "PP$", "Personal Prop", "Total.Pers") #OR
-#   gross_pp_cols_select <- intersect(grep(paste(gross_pp_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Net|Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
-#   
-#   #assign correct columns to final list from each file
-#   final_columns <- current_file[, c(town_col,
-#                                     commercial_col_select,
-#                                     industrial_col_select,
-#                                     residential_col_select,
-#                                     gross_real_cols_select,
-#                                     gross_mv_cols_select,
-#                                     gross_pp_cols_select,
-#                                     "Year")]
-#   
-#   #rename the columns
-#   names(final_columns) <- c("Town",
-#                             "Gross.Commercial.Grand.List", 
-#                             "Gross.Industrial.Grand.List", 
-#                             "Gross.Residential.Grand.List", 
-#                             "Gross.Real",
-#                             "Gross.Motor.Vehicle",
-#                             "Gross.Personal.Property",
-#                             "Year")
-#   
-#   assign(paste0("current_data_", i), final_columns)
-# }
-# 
-# #update this line (shouldn't hard code it)
-# current_GL_file <- current_data_1
-# 
-# rm(current_data_1, current_data_2)
-# 
-# # take out "Groton (City of)" because it is a political subdivision of groton and not the town.
-# current_GL_file <- current_GL_file[current_GL_file$Town != "GROTON (City of)",]
-# 
-# # Town names to title case
-# current_GL_file$"Town" <- gsub("\\b([a-z])([a-z]+)", "\\U\\1\\E\\2", tolower(current_GL_file$Town), perl=TRUE)
-# 
-# #Calculated columns
-# current_GL_file$"Gross.Real" <- as.numeric(current_GL_file$"Gross.Real") 
-# current_GL_file$"Gross.Motor.Vehicle" <- as.numeric(current_GL_file$"Gross.Motor.Vehicle") 
-# current_GL_file$"Gross.Personal.Property" <- as.numeric(current_GL_file$"Gross.Personal.Property") 
-# 
-# current_GL_file$"Total.Gross.Grand.List" <- NA
-# current_GL_file$"Total.Gross.Grand.List" <- current_GL_file$"Gross.Real" + current_GL_file$"Gross.Motor.Vehicle" + current_GL_file$"Gross.Personal.Property" 
-# 
-# #Select and reorder columns
-# current_GL_file <- current_GL_file[,c(
-#   "Town",                       
-#   "Gross.Residential.Grand.List",
-#   "Gross.Commercial.Grand.List",
-#   "Gross.Industrial.Grand.List",
-#   "Total.Gross.Grand.List",
-#   "Year"            
-# )]
-# 
-# current_GL_file<- arrange(current_GL_file, Year, Town)
-# 
-# #append new data
-# combined_componentGL <- rbind(legacy_GL_file, current_GL_file)
-# 
-# existing_version <- as.numeric(substr(last_GL_file, 13, 16))
-# new_version <- existing_version + 1
-# 
-# #save updated components csv back out to raw repo
-# write.table(
-#   combined_componentGL,
-#   paste0(getwd(), "/", "raw", "/", "components", "/", "componentGL_", new_version, ".csv"),
-#   sep = ",",
-#   row.names = F
-# )
-###########################################################################################################################
-#Clean up
-#rm(list=ls(pattern="^data"))
-#rm(current_file, final_columns, legacy_GL_file, current_GL_file)
-
-#componentGL list = combined_componentGL
-#all other data = municipal_grand_list_data
 
 #only reporting data from the following years (excluding historical data before 2000)
 final_years <- c("SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004", 
@@ -359,7 +229,7 @@ municipal_grand_list_data <- arrange(municipal_grand_list_data, Year, Variable, 
 # Write to File
 write.table(
   municipal_grand_list_data,
-  file.path(getwd(), "data", "municipal_grand_list_data.csv"),
+  file.path(getwd(), "data", "municipal_grand_list_data_2001-2015.csv"),
   sep = ",",
   na = "",
   row.names = F
