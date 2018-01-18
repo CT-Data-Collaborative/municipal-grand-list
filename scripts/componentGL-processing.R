@@ -1,4 +1,4 @@
-library("readxl")
+library(readxl)
 library(stringr)
 library(dplyr)
 
@@ -70,6 +70,7 @@ for(i in 1:length(get_updated_only)) {
 #Step 3: Add year column and only take first 169 rows
 for (i in 1:length(get_updated_only)) {
   current_file <- get(get_updated_only[i])
+  current_file <- current_file[current_file[,1] != "GROTON (City of)",]
   current_file <- current_file[1:169,]
   get_year <- substr(get_updated_only[i], 16, 20)
   get_year <- as.numeric(get_year)
@@ -164,6 +165,8 @@ rm(list=ls(pattern="^data"))
 
 #Step 5: Merge in town-code xwalk file to assign Town names
 colnames(GL_data)[1] <- "TownCode"
+GL_data$TownCode <- str_to_title(GL_data$TownCode)
+GL_data <- GL_data[!is.na(GL_data$TownCode),]
 
 town_code_xwalk_file <-file.path(path, "town_town-code_crosswalk.csv")
 town_code_xwalk <- read.csv(town_code_xwalk_file, header=T, stringsAsFactors=F)
@@ -206,7 +209,7 @@ rm(current_file, coded_GL_data, final_columns, GL_data, town_code_xwalk)
 # Write to File 
 write.table(
   all_GL_data,
-  file.path(path, "componentGL_2015.csv"),
+  file.path(path, "componentGL_2016.csv"),
   sep = ",",
   row.names = F
 )

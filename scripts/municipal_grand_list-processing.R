@@ -3,7 +3,6 @@ library(RCurl)
 library(devtools)
 library(datapkg)
 
-
 ##################################################################
 #
 # Processing Script for Municipal-Grand-List
@@ -97,35 +96,32 @@ municipal_grand_list_data <- arrange(municipal_grand_list_data, Year, Town)
 
 #############################################################################################################################
 
-destfile <- paste0(path, "/", "components", "/", "componentGL_2015.csv")
+destfile <- paste0(path, "/", "components", "/", "componentGL_2016.csv")
 
 if (!file.exists(destfile)) {  
   #process and create destfile (componentGL_processing script)
 } else {
   #set componentGL to destfile
-  combined_componentGL <- read.csv(destfile, stringsAsFactors=F, header=T)
+  combined_componentGL <- read.csv(destfile, stringsAsFactors=F, header=T, check.names=F)
 }
 
 #only reporting data from the following years (excluding historical data before 2000)
 final_years <- c("SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004", 
                  "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008", 
                  "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012", 
-                 "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015")
+                 "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015", "SFY 2015-2016")
 
-componentGL_used <- combined_componentGL[combined_componentGL$Year %in% final_years,]
-rm(combined_componentGL)
+combined_componentGL <- combined_componentGL[combined_componentGL$Year %in% final_years,]
 
 #merge GL data and all data
-municipal_grand_list_data_merged <- merge(componentGL_used, municipal_grand_list_data, by = c("Town", "Year"))
-rm(componentGL_used, municipal_grand_list_data)
-
+municipal_grand_list_data_merged <- merge(combined_componentGL, municipal_grand_list_data, by = c("Town", "Year"))
 
 #Create calculated columns
 municipal_grand_list_data_merged$"Equalized Net Grand List per Capita" <- NA
 municipal_grand_list_data_merged$"Equalized Net Grand List per Capita" <- round((municipal_grand_list_data_merged$"Equalized Net Grand List" / municipal_grand_list_data_merged$"Population"), 0)
 
 municipal_grand_list_data_merged$"Commercial and Industrial Share of Total Net Grand List" <- NA
-municipal_grand_list_data_merged$"Commercial and Industrial Share of Total Net Grand List" <- round(100 *((municipal_grand_list_data_merged$"Gross.Commercial.Grand.List" + municipal_grand_list_data_merged$"Gross.Industrial.Grand.List") / (municipal_grand_list_data_merged$"Net Grand List")), 2)
+municipal_grand_list_data_merged$"Commercial and Industrial Share of Total Net Grand List" <- round(100 *((municipal_grand_list_data_merged$"Gross Commercial Grand List" + municipal_grand_list_data_merged$"Gross Industrial Grand List") / (municipal_grand_list_data_merged$"Net Grand List")), 2)
 
 municipal_grand_list_data_merged$"Equalized Mill Rate" <- NA
 municipal_grand_list_data_merged$"Equalized Mill Rate" <- round(1000 * (municipal_grand_list_data_merged$"Current Year Adjusted Taxes Collectible" / municipal_grand_list_data_merged$"Equalized Net Grand List"), 2)
@@ -146,8 +142,8 @@ municipal_grand_list <- merge(municipal_grand_list, sum_pop, by="Year")
 municipal_grand_list$"Equalized Net Grand List per Capita as Percent of State Average" <- NA
 municipal_grand_list$"Equalized Net Grand List per Capita as Percent of State Average" <- round(((municipal_grand_list$"Equalized Net Grand List per Capita")/((municipal_grand_list$`Equalized Net Grand List.y`)/(municipal_grand_list$Population.y)))*100, 2)  
 
-municipal_grand_list_arranged <- select(municipal_grand_list, `Year`, `Town`, `Gross.Residential.Grand.List`, `Gross.Commercial.Grand.List`, 
-                                                              `Gross.Industrial.Grand.List`, `Total.Gross.Grand.List`, `Equalized Net Grand List.x`, 
+municipal_grand_list_arranged <- select(municipal_grand_list, `Year`, `Town`, `Gross Residential Grand List`, `Gross Commercial Grand List`, 
+                                                              `Gross Industrial Grand List`, `Total Gross Grand List`, `Equalized Net Grand List.x`, 
                                                               `Actual Mill Rate`, `Net Grand List`, `Equalized Net Grand List per Capita`, 
                                                               `Commercial and Industrial Share of Total Net Grand List`, `Equalized Mill Rate`, 
                                                               `Equalized Net Grand List per Capita as Percent of State Average`) %>% 
@@ -158,8 +154,6 @@ colnames(municipal_grand_list_arranged) <- c("Year", "Town", "Gross Residential 
                                              "Actual Mill Rate", "Net Grand List", "Equalized Net Grand List per Capita", 
                                              "Commercial and Industrial Share of Total Net Grand List", "Equalized Mill Rate", 
                                              "Equalized Net Grand List per Capita as Percent of State Average")
-
-rm(sum_engl, sum_pop, municipal_grand_list, municipal_grand_list_data_merged)
 
 ###############################################################################################################################################
 #convert to long format
@@ -193,6 +187,9 @@ combined_final_long$id <- NULL
 #check to see if any duplicates made it into the data frame (this should be empty)
 duplicates <- combined_final_long[duplicated(combined_final_long[,1:3]),]
 
+#turn off scientific notation
+options(scipen = 999)
+
 #add Measure Type
 combined_final_long$"Measure Type" <- NA
 ##fill in 'Measure Type' column based on criteria listed below
@@ -218,18 +215,17 @@ fips <- (town_fips_dp$data[[1]])
 merge_long_fips <- merge(combined_final_long, fips, all=T)
 
 #remove "Connecticut"
-municipal_grand_list_data <- merge_long_fips[!merge_long_fips$Town == "Connecticut",]
+municipal_grand_list_data <- merge_long_fips[merge_long_fips$Town != "Connecticut",]
 
 #Reorder columns
-municipal_grand_list_data <- municipal_grand_list_data[c("Town", "FIPS", "Year", "Measure Type", "Variable", "Value")]
-
-#Sort data
-municipal_grand_list_data <- arrange(municipal_grand_list_data, Year, Variable, `Measure Type`, Town)
+municipal_grand_list_data <- municipal_grand_list_data %>% 
+  select(Town, FIPS, Year, `Measure Type`, Variable, Value) %>% 
+  arrange(Town, Year, `Measure Type`, Variable)
 
 # Write to File
 write.table(
   municipal_grand_list_data,
-  file.path(getwd(), "data", "municipal_grand_list_data_2001-2015.csv"),
+  file.path(getwd(), "data", "municipal_grand_list_data_2001-2016.csv"),
   sep = ",",
   na = "",
   row.names = F

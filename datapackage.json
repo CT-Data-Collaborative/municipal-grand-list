@@ -21,7 +21,7 @@
   }],
   "contributor": [],
   "resources": [{
-    "path": "data/municipal_grand_list_data_2001-2015.csv",
+    "path": "data/municipal_grand_list_data_2001-2016.csv",
     "format": "csv",
     "schema": {
       "fields": [{
@@ -73,11 +73,11 @@
       }]
     }
     }],
-    "last_modified": "02/15/2017",
+    "last_modified": "01/18/2018",
     "ckan_extras": {
       "full_description": {
         "ckan_name": "Full Description",
-        "value": "tate Fiscal Years run from July 1 through the following June 30. Population estimates used to calculate Per Capita measures were derived using the Connecticut Department of Public Health estimates as of July 1 of the year ending the State Fiscal Year - ie. SFY 2012-2013 uses the population estimate for July 1, 2013. Grand List indicators are derived from October of the year preceding the State Fiscal Year - ie SFY 2012-2013 uses Grand List data from October 2011. Due to the required time and resources necessary for re-evalutaion, municipalities are evaluated for Grand List figures on a rolling basis. Equalized Net Grand List values are derived as a way of giving an equal ground for comparison to all municipalities, regardless of when that municipality is scheduled to be re-evaluated next. Equalized Mill Rates are calculated using the Equalized Net Grand List. Equalized Net Grand List figures are a measure of only the taxable real and personal property, i.e. the gross property estimate minus any tax exempt properties. Mill Rates are the amount of tax payable per $1000 of value for a given property. Mill Rates are presented as thousandths of a dollar, e.g. a Mill Rate of 1 means every $1000 of value would equal $1 of tax. These rates are calculated by taking the projected revenue from taxable property, dividing it by the total net worth of taxable property (Equalized Net Grand List) and multiplying by 1000.",
+        "value": "State Fiscal Years run from July 1 through the following June 30. Population estimates used to calculate Per Capita measures were derived using the Connecticut Department of Public Health estimates as of July 1 of the year ending the State Fiscal Year - ie. SFY 2012-2013 uses the population estimate for July 1, 2013. Grand List indicators are derived from October of the year preceding the State Fiscal Year - ie SFY 2012-2013 uses Grand List data from October 2011. Due to the required time and resources necessary for re-evalutaion, municipalities are evaluated for Grand List figures on a rolling basis. Equalized Net Grand List values are derived as a way of giving an equal ground for comparison to all municipalities, regardless of when that municipality is scheduled to be re-evaluated next. Equalized Mill Rates are calculated using the Equalized Net Grand List. Equalized Net Grand List figures are a measure of only the taxable real and personal property, i.e. the gross property estimate minus any tax exempt properties. Mill Rates are the amount of tax payable per $1000 of value for a given property. Mill Rates are presented as thousandths of a dollar, e.g. a Mill Rate of 1 means every $1000 of value would equal $1 of tax. These rates are calculated by taking the projected revenue from taxable property, dividing it by the total net worth of taxable property (Equalized Net Grand List) and multiplying by 1000.",
         "type": "string"
       },
       "suppression": {
@@ -128,12 +128,12 @@
         "value": ["SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004",
                   "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008",
                   "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012",
-                  "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015"],
+                  "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015", "SFY 2015-2016"],
         "type": "array"
       },
       "latest_year": {
         "ckan_name": "Latest Year Available from Source",
-        "value": "SFY 2014-2015",
+        "value": "SFY 2015-2016",
         "type": "string"
       },
       "disabled_views": {
@@ -159,10 +159,9 @@
       "default": {
         "ckan_name": "Default",
 		  	"value": {
-		  		"Measure Type": "Number",
-		  		"Town": "Andover",
-		  		"Year": ["SFY 2000-2001"],
-		  		"Variable": "Actual Mill Rate"
+		  		"Town": "Hartford",
+		  		"Year": ["SFY 2015-2016"],
+		  		"Variable": "Total Gross Grand List"
         },
 		  	"type": "object"
       },
@@ -339,6 +338,20 @@
           "type": "$match",
           "number type": "int",
           "value": 3854054415
+        }
+      },
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Woodstock",
+          "Year": "SFY 2015-2016",
+          "Variable": "Equalized Mill Rate",
+          "Measure Type":"Mill Rate"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "float",
+          "value": 16.43
         }
       }
     ],
