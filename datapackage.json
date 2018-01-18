@@ -87,7 +87,7 @@
       },
       "technical_notes": {
         "ckan_name": "Technical Notes",
-        "value": "None",
+        "value": "",
         "type": "string"
       },
       "numerator": {
@@ -100,6 +100,21 @@
         "value": "For Equalized Mill Rate, the denominator is the Equalized Net Grand List for the selected municipality and year. For Equalized Net Grand List per Capita, the denominator is the total Population for the selected municipality as of July 1 of the end year for the selected State Fiscal Year (eg July 1, 2013 for SFY 2012-2013).  For Equalized Net Grand List per Capita as Percent of State Average, the denominator is the quotient of asum of all Equalized Net Grand List totals for every municipality divided by the sum of their respective Populations for the selected year.",
         "type": "string"
       },
+      "socrata": {
+        "ckan_name": "Socrata",
+        "value": "True",
+        "type": "string"
+      }, 
+      "socrata_url": {
+        "ckan_name": "Socrata Dataset URL",
+        "value": "https://data.ct.gov/Government/Municipal-Fiscal-Indicators-2012-2016-MS-Access-Da/x5e2-4aw5",
+        "type": "string"
+      },
+      "socrata_dataset_name": {
+        "ckan_name": "Socrata Dataset Name",
+        "value": "Municipal Fiscal Indicators (2012-2016) MS Access Database",
+        "type": "string"
+      },      
       "domain": {
         "ckan_name": "Domain",
         "value": "Civic Vitality",
@@ -164,11 +179,6 @@
 		  		"Variable": "Total Gross Grand List"
         },
 		  	"type": "object"
-      },
-      "socrata": {
-        "ckan_name": "Socrata",
-        "value": "True",
-        "type": "string"
       }
     },
     "spot_checks": [
