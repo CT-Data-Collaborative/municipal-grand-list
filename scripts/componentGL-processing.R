@@ -153,8 +153,8 @@ for (i in 1:length(get_updated_only)) {
 }
 
 #Clean up
-rm(list=ls(pattern="^updated"))
-rm(list=ls(pattern="^GLdata"))
+#rm(list=ls(pattern="^updated"))
+#rm(list=ls(pattern="^GLdata"))
 
 dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
 final <- grep("^data", dfs, value=T)
@@ -170,7 +170,7 @@ for (i in 1:length(final)) {
 }
 
 #Clean up 
-rm(list=ls(pattern="^data"))
+#rm(list=ls(pattern="^data"))
 
 #Step 5: Merge in town-code xwalk file to assign Town names
 colnames(GL_data)[1] <- "TownCode"
@@ -209,11 +209,12 @@ all_GL_data <- all_GL_data[,c(
 
 all_GL_data<- arrange(all_GL_data, Year, Town)
 
-#setting NAs to zero to designate no grand list available
+#setting NAs and blanks to zero to designate no grand list available
 all_GL_data[is.na(all_GL_data)] <- 0
+all_GL_data$`Gross Industrial Grand List` <- sub("^$", "0", all_GL_data$`Gross Industrial Grand List`)
 
 #Clean up
-rm(current_file, coded_GL_data, final_columns, GL_data, town_code_xwalk)
+#rm(current_file, coded_GL_data, final_columns, GL_data, town_code_xwalk)
 
 # Write to File 
 write.table(
@@ -223,6 +224,6 @@ write.table(
   row.names = F
 )
 
-rm(all_GL_data)
+#rm(all_GL_data)
 
 

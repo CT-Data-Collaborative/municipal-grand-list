@@ -220,7 +220,7 @@ municipal_grand_list_data <- merge_long_fips[merge_long_fips$Town != "Connecticu
 #Reorder columns
 municipal_grand_list_data <- municipal_grand_list_data %>% 
   select(Town, FIPS, Year, `Measure Type`, Variable, Value) %>% 
-  arrange(Town, Year, `Measure Type`, Variable)
+  arrange(Year, Variable, `Measure Type`, Town)
 
 # Write to File
 write.table(
