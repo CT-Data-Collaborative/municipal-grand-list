@@ -73,7 +73,7 @@
       }]
     }
     }],
-    "last_modified": "01/18/2018",
+    "last_modified": "01/30/2018",
     "ckan_extras": {
       "full_description": {
         "ckan_name": "Full Description",
@@ -363,7 +363,21 @@
           "number type": "float",
           "value": 16.43
         }
-      }
+      },
+      {
+        "type": "$lookup",
+        "filter": {
+          "Town": "Glastonbury",
+          "Year": "SFY 2010-2011",
+          "Variable": "Total Gross Grand List",
+          "Measure Type":"Number"
+        },
+        "expected": {
+          "type": "$match",
+          "number type": "int",
+          "value": 4147088710
+        }
+      }      
     ],
     "dimension_groups": [
       {

@@ -1,6 +1,6 @@
-library(readxl)
 library(stringr)
 library(dplyr)
+library(gdata)
 
 ##################################################################
 #
@@ -29,9 +29,11 @@ all_xls <- dir(path, pattern = ".xls")
 sheet_match <- c("2002")
 for(i in 1:length(all_xls)) {
   if (grepl(paste(sheet_match, collapse="|"), all_xls[i]))
-    current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=3, skip=0))
+    current_file = read.xls(paste0(path, "/", all_xls[i]), sheet = 3, header = TRUE)
   else
-    current_file <- (read_excel(paste0(path, "/", all_xls[i]), sheet=1, skip=0))
+    current_file = read.xls(paste0(path, "/", all_xls[i]), sheet = 1, header = TRUE)
+  current_file <- data.frame(lapply(current_file, function(x) {gsub("\\$", "", x)}), stringsAsFactors = F)
+  current_file <- data.frame(lapply(current_file, function(x) {gsub(",", "", x)}), stringsAsFactors = F)
   assign(paste0("GLdata_", substr(all_xls[i], 1, 4)), current_file)
 }
 
@@ -88,8 +90,13 @@ get_updated_only <- grep("^updated", dfs, value=T)
 all_GL_data <- data.frame(stringsAsFactors=F)
 
 for (i in 1:length(get_updated_only)) {
-  col_names <- colnames(get(get_updated_only[i]))
+  file <- get(get_updated_only[i])
+  col_names <- colnames(file)
   
+  if (is.na(col_names[1])) {
+    file <- file[,-1]
+    col_names <- colnames(file)
+  }
   #assign town (brings in town or town code)
   town_col <- col_names[1]
   
@@ -107,20 +114,22 @@ for (i in 1:length(get_updated_only)) {
 
   #search for "Gross Real"
   #####Manually updated 1995_list.xlsx to have "Total Real" as column header, 2008: 'Real Exemptions' header
-  gross_real_cols <- c("TotalReal", "Total_Real", "Total Real", "Real Total")
+  gross_real_cols <- c("TotalReal", "Total_Real", "Total Real", "Real Total", "Total.Real$", "TOTAL.REAL")
   #takes all columns that include gross_real_cols but excludes those that contain "Tax Property Exemptions"
-  gross_real_cols_select <- intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Property Tax Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
+  gross_real_cols_select <- intersect(intersect(grep(paste(gross_real_cols, collapse = "|"), col_names, value=T, ignore.case=T), 
+                                      grep("Property Tax Exemptions", col_names, invert=TRUE, value=T, ignore.case=T)), 
+                                      grep("Property.Tax.Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
   #search for "Gross Motor Vehicle"
-  gross_mv_cols <- c("Motor$", "Total MV$", "Motor Vehicle$", "2005 MV", "Total Gross MV") #OR
+  gross_mv_cols <- c("Motor$", "Total MV$", "Motor Vehicle$", "2005 MV", "Total Gross MV", "TOTAL.GROSS.MV", "Motor.Vehicle$", "TOTAL.MV$") #OR
   gross_mv_cols_select <- grep(paste(gross_mv_cols, collapse = "|"), col_names, value=T, ignore.case=T)
 
   # #search for "Gross Personal Property" 
-  gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "Total Gross Perp",  "PP$", "Personal Prop") #OR
+  gross_pp_cols <- c("Total Personal Property$", "Personal$", "Pers Prop", "^Perp$", "Total Gross Perp",  "PP$", "Personal Prop", "PERS.PROP", "Personal.Property$") #OR
   gross_pp_cols_select <- intersect(grep(paste(gross_pp_cols, collapse = "|"), col_names, value=T, ignore.case=T), grep("Net|Exemptions", col_names, invert=TRUE, value=T, ignore.case=T))
   
   #assign correct columns to final list from each file
-  final_columns <- get(get_updated_only[i])[, c(town_col,
+  final_columns <- file[, c(town_col,
                                                 commercial_col_select,
                                                 industrial_col_select,
                                                 residential_col_select,
