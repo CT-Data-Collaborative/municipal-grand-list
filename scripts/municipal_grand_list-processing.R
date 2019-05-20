@@ -96,7 +96,7 @@ municipal_grand_list_data <- arrange(municipal_grand_list_data, Year, Town)
 
 #############################################################################################################################
 
-destfile <- paste0(path, "/", "components", "/", "componentGL_2016.csv")
+destfile <- paste0(path, "/", "components", "/", "componentGL_2017.csv")
 
 if (!file.exists(destfile)) {  
   #process and create destfile (componentGL_processing script)
@@ -109,7 +109,8 @@ if (!file.exists(destfile)) {
 final_years <- c("SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-2004", 
                  "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008", 
                  "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012", 
-                 "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015", "SFY 2015-2016")
+                 "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015", "SFY 2015-2016",
+                 "SFY 2016-2017")
 
 combined_componentGL <- combined_componentGL[combined_componentGL$Year %in% final_years,]
 
@@ -222,10 +223,18 @@ municipal_grand_list_data <- municipal_grand_list_data %>%
   select(Town, FIPS, Year, `Measure Type`, Variable, Value) %>% 
   arrange(Year, Variable, `Measure Type`, Town)
 
+
+# For 2013-2017, they show Mill Rates for both Property and Car for some town.
+# Only use property in that case. Added by Ilya on May 20, 2019
+municipal_grand_list_data$Value <- sapply(strsplit(municipal_grand_list_data$Value, ' / '), '[', 1)
+
+# Convert string values into doubles - added by Ilya on May 20, 2019 for 2001-2017 file
+municipal_grand_list_data$Value <- round(as.double(municipal_grand_list_data$Value), digits=2)
+
 # Write to File
 write.table(
   municipal_grand_list_data,
-  file.path(getwd(), "data", "municipal_grand_list_data_2001-2016.csv"),
+  file.path(getwd(), "data", "municipal_grand_list_data_2001-2017.csv"),
   sep = ",",
   na = "",
   row.names = F
