@@ -17,11 +17,11 @@
   "author":[{
     "name": "Connecticut Data Collaborative",
     "email": "info@ctdata.org",
-    "web": "http://ctdata.org"
+    "web": "https://ctdata.org"
   }],
   "contributor": [],
   "resources": [{
-    "path": "data/municipal_grand_list_data_2001-2017.csv",
+    "path": "data/municipal_grand_list_data_2001-2018.csv",
     "format": "csv",
     "schema": {
       "fields": [{
@@ -73,7 +73,7 @@
       }]
     }
     }],
-    "last_modified": "05/20/2019",
+    "last_modified": "03/09/2021",
     "ckan_extras": {
       "full_description": {
         "ckan_name": "Full Description",
@@ -144,12 +144,12 @@
                   "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008",
                   "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012",
                   "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015", "SFY 2015-2016",
-                  "SFY 2016-2017"],
+                  "SFY 2016-2017", "SFY 2017-2018"],
         "type": "array"
       },
       "latest_year": {
         "ckan_name": "Latest Year Available from Source",
-        "value": "SFY 2016-2017",
+        "value": "SFY 2017-2018",
         "type": "string"
       },
       "disabled_views": {
@@ -176,7 +176,7 @@
         "ckan_name": "Default",
 		  	"value": {
 		  		"Town": "Hartford",
-		  		"Year": ["SFY 2016-2017"],
+		  		"Year": ["SFY 2017-2018"],
 		  		"Variable": "Total Gross Grand List"
         },
 		  	"type": "object"

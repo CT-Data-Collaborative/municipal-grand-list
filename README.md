@@ -1,16 +1,16 @@
 Municipal-Grand-List
 
-Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates.
+Municipal Grand List reports indicators of the Equalized Net Grand List and related Mill Rates. List of datasets is available from <https://portal.ct.gov/OPM/IGP-MUNFINSR/Municipal-Financial-Services/Municipal-Fiscal-Indicators>
 
-Data Source: <https://data.ct.gov/Government/Municipal-Fiscal-Indicators-2012-2016-MS-Access-Da/x5e2-4aw5>
+Most recent dataset available is for SFY 2017-2018, in the [2014-2018 MS Access database on Socrata](https://data.ct.gov/Local-Government/Municipal-Fiscal-Indicators-2014-2018-MS-Access-da/k2mn-ewcm).
 
-Supplement PDF: <http://www.ct.gov/opm/cwp/view.asp?A=2984&Q=383170>
-
-## Instructions for downloading CSVs from MS Access Database
-
-1) Download zip file from data.ct.gov
-2) Export .mdb to working directory
-3) Run get_csvs.sh file in same directory as .mdb file (make sure to change name of file in script)
+## Updating instructions
+1. Download the new .mdb file, and place it to `raw/{NEW-YEAR}/`.
+1. Run `get_csvs.sh` file in same directory as .mdb file (make sure to change name of file in script). This will extract Excel and CSV files from the MS Access database.
+1. Locate GL Components CSV file in the raw data, which should be called like `GL Components 2017 GL Year.csv`. Open it in Excel, change all numeric values format from *Scientific* to *General* to make sure numbers aren't rounded in the final output, and save as XLS to `/raw/components/{YEAR}_list.xls`.
+1. In RStudio, modify `scripts/componentGL-processing.R` with an appropriate output file name (update year).
+1. In RStudio, modify output file in `scripts/municipal_grand_list-processing.R` (end of file), as well as `destfile` URL value to match the output file from the previous step (around line 100), and add a new fiscal year to the `final_years` list (around line 111).
+1. Run the processing script.
 
 ## License MIT
 

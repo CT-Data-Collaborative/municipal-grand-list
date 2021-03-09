@@ -40,6 +40,8 @@ for (j in 1:length(year_folders)) {
   only_FISCIN <- all_csvs[grep("FISCIN", all_csvs)] 
   for (i in 1:length(only_FISCIN)) {
     current_file <- read.csv(paste0(year_path, "/", only_FISCIN[i]), stringsAsFactors=F, header=T)
+    print(year_path)
+    print(only_FISCIN[i])
     remove_folder <- sub(".*/", "", only_FISCIN[i]) #filename
     get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(remove_folder)), "")))
     get_year <- get_year + 2000
@@ -96,7 +98,7 @@ municipal_grand_list_data <- arrange(municipal_grand_list_data, Year, Town)
 
 #############################################################################################################################
 
-destfile <- paste0(path, "/", "components", "/", "componentGL_2017.csv")
+destfile <- paste0(path, "/", "components", "/", "componentGL_2018.csv")
 
 if (!file.exists(destfile)) {  
   #process and create destfile (componentGL_processing script)
@@ -110,7 +112,7 @@ final_years <- c("SFY 2000-2001", "SFY 2001-2002", "SFY 2002-2003", "SFY 2003-20
                  "SFY 2004-2005", "SFY 2005-2006", "SFY 2006-2007", "SFY 2007-2008", 
                  "SFY 2008-2009", "SFY 2009-2010", "SFY 2010-2011", "SFY 2011-2012", 
                  "SFY 2012-2013", "SFY 2013-2014", "SFY 2014-2015", "SFY 2015-2016",
-                 "SFY 2016-2017")
+                 "SFY 2016-2017", "SFY 2017-2018")
 
 combined_componentGL <- combined_componentGL[combined_componentGL$Year %in% final_years,]
 
@@ -234,7 +236,7 @@ municipal_grand_list_data$Value <- round(as.double(municipal_grand_list_data$Val
 # Write to File
 write.table(
   municipal_grand_list_data,
-  file.path(getwd(), "data", "municipal_grand_list_data_2001-2017.csv"),
+  file.path(getwd(), "data", "municipal_grand_list_data_2001-2018.csv"),
   sep = ",",
   na = "",
   row.names = F

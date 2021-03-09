@@ -219,7 +219,7 @@ all_GL_data$`Gross Industrial Grand List` <- sub("^$", "0", all_GL_data$`Gross I
 # Write to File 
 write.table(
   all_GL_data,
-  file.path(path, "componentGL_2017.csv"),
+  file.path(path, "componentGL_2018.csv"),
   sep = ",",
   row.names = F
 )
